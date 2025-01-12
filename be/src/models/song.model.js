@@ -28,7 +28,7 @@ const songScheme = new mongoose.Schema(
       required: false,
     },
   },
-  { timestamps: true } // 42:20
+  { timestamps: true }
 );
 
 export const Song = mongoose.model("Song", songScheme);
