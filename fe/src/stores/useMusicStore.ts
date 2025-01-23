@@ -63,12 +63,11 @@ export const useMusicStore = create<MusicStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await axiosInstance.delete(`/admin/albums/${id}`);
-
       set((state) => ({
         // update the state
         albums: state.albums.filter((album) => album._id !== id),
 
-        // check if song belongs to album that is being deleted
+        // update the songs
         songs: state.songs.map((song) =>
           song.albumId === state.albums.find((a) => a._id === id)?.title
             ? { ...song, album: null }
@@ -78,7 +77,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
 
       toast.success("Album deleted successfully");
     } catch (error: any) {
-      set({ error: error.res.data.message });
+      toast.error("Failed to delete album: " + error.message);
     } finally {
       set({ isLoading: false });
     }
