@@ -80,7 +80,7 @@ const LeftSidebar = () => {
                   />
 
                   <div className="flex-1 min-w-0 hidden md:block">
-                    <p className="font-medium truncate">{album.title}</p>
+                    <p className="font-medium line-clamp-2">{album.title}</p>
                     <p className="text-sm text-zinc-400 truncate">
                       Album • {album.artist}
                     </p>
