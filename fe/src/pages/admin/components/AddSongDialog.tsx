@@ -94,6 +94,7 @@ const AddSongDialog = () => {
       });
 
       toast.success("Song added successfully");
+      setSongDialogOpen(false); // Đóng dialog sau khi thêm thành công
     } catch (error: any) {
       toast.error("Failed to add song: " + error.message);
     } finally {
