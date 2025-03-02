@@ -9,9 +9,14 @@ import {
 } from "@/components/ui/table";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Calendar, Trash2 } from "lucide-react";
+import { useEffect } from "react";
 
 const SongsTable = () => {
-  const { songs, isLoading, error, deleteSong } = useMusicStore();
+  const { songs, isLoading, error, deleteSong, fetchSongs } = useMusicStore();
+
+  useEffect(() => {
+    fetchSongs();
+  }, [fetchSongs]);
 
   if (isLoading) {
     return (
