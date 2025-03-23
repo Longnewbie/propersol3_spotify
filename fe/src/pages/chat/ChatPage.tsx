@@ -85,6 +85,8 @@ const ChatPage = () => {
                       </div>
                     </div>
                   ))}
+                  {/* Element to scroll into view */}
+                  <div ref={messagesEndRef} />
                 </div>
               </ScrollArea>
 
