@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./be
+    container_name: spotify_backend
+    ports:
+      - "5000:5000"
+    env_file:
+      - .env
+    volumes:
+      - ./be:/app
+    command: npm start
+
+  frontend:
+    build: ./fe
+    container_name: spotify_frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./fe:/app
+      - ./fe/.env.local:/app/.env.local  # Mount file env
+      - /app/node_modules  # tránh ghi đè node_modules bên trong container
+    working_dir: /app
+    command: sh -c "npm install && npm run dev -- --host"

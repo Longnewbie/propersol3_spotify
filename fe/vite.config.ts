@@ -11,5 +11,9 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    host: true, // Để truy cập từ máy hostAdd commentMore actions
+    watch: {
+      usePolling: true, // Bắt buộc với Docker để theo dõi thay đổi file
+    },
   },
 });
