@@ -1,1 +1,1 @@
-spotify frontend propersol-3 gialongdev 1
+spotify frontend propersol-3 gialongdev
