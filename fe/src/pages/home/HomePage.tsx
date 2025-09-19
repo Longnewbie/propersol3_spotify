@@ -36,8 +36,6 @@ const HomePage = () => {
     }
   }, [initializeQueue, madeForYouSongs, featuredSongs, trendingSongs]);
 
-  console.log({ isLoading, featuredSongs, madeForYouSongs, trendingSongs });
-
   return (
     <main className="rounded-md overflow-hidden h-full bg-gradient-to-b from-zinc-800 to-zinc-900">
       <Topbar />

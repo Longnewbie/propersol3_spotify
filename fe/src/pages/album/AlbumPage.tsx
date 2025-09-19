@@ -143,7 +143,7 @@ const AlbumPage = () => {
                           <img
                             src={song.imageUrl}
                             alt={song.title}
-                            className="size-10"
+                            className="size-10 object-cover"
                           />
 
                           <div>

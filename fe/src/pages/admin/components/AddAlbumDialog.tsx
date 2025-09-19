@@ -12,8 +12,12 @@ import { DialogTrigger } from "@radix-ui/react-dialog";
 import { Plus, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
+import { useMusicStore } from "@/stores/useMusicStore";
+import { useAuth } from "@clerk/clerk-react";
 
 const AddAlbumDialog = () => {
+  const { getToken } = useAuth();
+  const { fetchAlbums } = useMusicStore();
   const [albumDialogOpen, setAlbumDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -37,6 +41,8 @@ const AddAlbumDialog = () => {
     setIsLoading(true);
 
     try {
+      const token = await getToken();
+
       if (!imageFile) {
         return toast.error("Please upload an image file.");
       }
@@ -49,6 +55,7 @@ const AddAlbumDialog = () => {
 
       await axiosInstance.post("/admin/albums", formData, {
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -63,6 +70,8 @@ const AddAlbumDialog = () => {
       setAlbumDialogOpen(false);
 
       toast.success("Album added successfully!");
+
+      fetchAlbums();
     } catch (error: any) {
       toast.error("Failed to add album: " + error.message);
     } finally {
@@ -156,7 +165,7 @@ const AddAlbumDialog = () => {
           </Button>
           <Button
             onClick={handleSubmit}
-            className="bg-violet-500 hover:bg-violet-600"
+            className="text-white bg-violet-500 hover:bg-violet-600"
             disabled={
               isLoading || !imageFile || !newAlbum.title || !newAlbum.artist
             }

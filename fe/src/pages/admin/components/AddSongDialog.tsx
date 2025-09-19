@@ -20,6 +20,7 @@ import { axiosInstance } from "@/lib/axios";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
 import { useRef, useState } from "react";
+import { useAuth } from "@clerk/clerk-react";
 import toast from "react-hot-toast";
 
 interface NewSong {
@@ -30,7 +31,8 @@ interface NewSong {
 }
 
 const AddSongDialog = () => {
-  const { albums } = useMusicStore();
+  const { getToken } = useAuth();
+  const { albums, fetchSongs } = useMusicStore();
   const [songDialogOpen, setSongDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -59,6 +61,8 @@ const AddSongDialog = () => {
     setIsLoading(true);
 
     try {
+      const token = await getToken();
+
       if (!files.audio || !files.image) {
         return toast.error("Please upload both audio and image files.");
       }
@@ -77,6 +81,7 @@ const AddSongDialog = () => {
 
       await axiosInstance.post("/admin/songs", formData, {
         headers: {
+          Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",
         },
       });
@@ -95,6 +100,8 @@ const AddSongDialog = () => {
 
       toast.success("Song added successfully");
       setSongDialogOpen(false); // Đóng dialog sau khi thêm thành công
+
+      fetchSongs();
     } catch (error: any) {
       toast.error("Failed to add song: " + error.message);
     } finally {
