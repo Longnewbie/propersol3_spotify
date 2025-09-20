@@ -23,8 +23,17 @@ const formatTime = (time: number) => {
 };
 
 const PlayBackControls = () => {
-  const { currentSong, isPlaying, togglePlay, playNext, playPrevious } =
-    usePlayerStore();
+  const {
+    currentSong,
+    isPlaying,
+    togglePlay,
+    playNext,
+    playPrevious,
+    shuffle,
+    repeatMode,
+    toggleShuffle,
+    cycleRepeatMode,
+  } = usePlayerStore();
 
   const [volume, setVolume] = useState(75);
   const [currentTime, setCurrentTime] = useState(0);
@@ -41,19 +50,26 @@ const PlayBackControls = () => {
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
 
-    audio.addEventListener("timeupdate", updateTime);
-    audio.addEventListener("loadedmetadata", updateDuration);
+    const handlePlay = () => usePlayerStore.setState({ isPlaying: true });
+    const handlePause = () => usePlayerStore.setState({ isPlaying: false });
 
     const handleEnded = () => {
       usePlayerStore.setState({ isPlaying: false });
     };
 
+    audio.addEventListener("timeupdate", updateTime);
+    audio.addEventListener("loadedmetadata", updateDuration);
+    audio.addEventListener("play", handlePlay);
+    audio.addEventListener("pause", handlePause);
     audio.addEventListener("ended", handleEnded);
 
     return () => {
       audio.removeEventListener("timeupdate", updateTime);
       audio.removeEventListener("loadedmetadata", updateDuration);
       audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("ended", handleEnded);
+      audio.removeEventListener("play", handlePlay);
+      audio.removeEventListener("pause", handlePause);
     };
   }, [currentSong]);
 
@@ -91,7 +107,11 @@ const PlayBackControls = () => {
             <Button
               size={"icon"}
               variant={"ghost"}
-              className="hidden sm:inline-flex hover:text-white text-zinc-400"
+              className={`hidden sm:inline-flex transition-colors ${
+                shuffle ? "text-amber-400" : "text-zinc-400 hover:text-white"
+              }`}
+              onClick={toggleShuffle}
+              title="Shuffle"
             >
               <Shuffle className="size-4" />
             </Button>
@@ -132,9 +152,20 @@ const PlayBackControls = () => {
             <Button
               size={"icon"}
               variant={"ghost"}
-              className="hidden sm:inline-flex hover:text-white text-zinc-400"
+              className={`hidden sm:inline-flex relative transition-colors ${
+                repeatMode !== "off"
+                  ? "text-amber-400"
+                  : "text-zinc-400 hover:text-white"
+              }`}
+              onClick={cycleRepeatMode}
+              title={`Repeat: ${repeatMode}`}
             >
               <Repeat className="size-4" />
+              {repeatMode === "one" && (
+                <span className="absolute -top-1 -right-1 text-[10px] bg-amber-400 text-black rounded-full px-[5px] leading-4">
+                  1
+                </span>
+              )}
             </Button>
           </div>
 

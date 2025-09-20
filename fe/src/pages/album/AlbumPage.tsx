@@ -5,6 +5,7 @@ import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Clock, Pause, Play } from "lucide-react";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
+import AlbumPageSkeleton from "./AlbumPageSkeleton";
 
 export const formatDuration = (duration: number) => {
   const minute = Math.floor(duration / 60);
@@ -21,7 +22,7 @@ const AlbumPage = () => {
     if (albumId) fetchAlbumById(albumId);
   }, [fetchAlbumById, albumId]);
 
-  if (isLoading) return null;
+  if (isLoading) return <AlbumPageSkeleton />;
 
   const handlePlayAlbum = () => {
     if (!currentAlbum) return;
