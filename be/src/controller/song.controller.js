@@ -78,3 +78,39 @@ export const getTrendingSongs = async (req, res, next) => {
     next(error);
   }
 };
+
+export const searchSongs = async (req, res, next) => {
+  try {
+    const q = (req.query.q || "").toString().trim();
+    if (!q) return res.status(200).json([]);
+
+    // simple case-insensitive partial match on title or artist
+    const regex = new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i");
+
+    const songs = await Song.find({
+      $or: [{ title: regex }, { artist: regex }],
+    })
+      .limit(20)
+      .populate("albumId", "_id title imageUrl");
+
+    // map albumId to a consistent album object if populated
+    const mapped = songs.map((s) => ({
+      _id: s._id,
+      title: s.title,
+      artist: s.artist,
+      imageUrl: s.imageUrl,
+      audioUrl: s.audioUrl,
+      album: s.albumId
+        ? {
+            _id: s.albumId._id,
+            title: s.albumId.title,
+            imageUrl: s.albumId.imageUrl,
+          }
+        : null,
+    }));
+
+    res.status(200).json(mapped);
+  } catch (error) {
+    next(error);
+  }
+};
