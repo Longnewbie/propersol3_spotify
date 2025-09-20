@@ -27,6 +27,7 @@ const SearchBar = () => {
   const [open, setOpen] = useState(false);
   const [results, setResults] = useState<any[]>([]);
   const [expanded, setExpanded] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!songs || songs.length === 0) fetchSongs();
@@ -36,10 +37,15 @@ const SearchBar = () => {
   useEffect(() => {
     let mounted = true;
     const q = debouncedQuery?.toString().trim();
-    if (!q) return setResults([]);
+    if (!q) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
 
     (async () => {
       try {
+        setLoading(true);
         const res = await axiosInstance.get(
           `/songs/search?q=${encodeURIComponent(q)}`
         );
@@ -47,6 +53,8 @@ const SearchBar = () => {
         setResults(res.data || []);
       } catch {
         setResults([]);
+      } finally {
+        if (mounted) setLoading(false);
       }
     })();
 
@@ -54,6 +62,27 @@ const SearchBar = () => {
       mounted = false;
     };
   }, [debouncedQuery]);
+
+  const dataLoading = () => {
+    return (
+      <div>
+        <div className="max-h-80 overflow-y-auto search-scrollbar">
+          {Array.from({ length: 5 }).map((_, i) => (
+            <div
+              key={i}
+              className="w-full text-left px-3 py-3 flex gap-3 items-center"
+            >
+              <div className="w-10 h-10 rounded bg-zinc-800 animate-pulse" />
+              <div className="flex-1">
+                <div className="h-3 bg-zinc-800 rounded w-3/4 mb-2 animate-pulse" />
+                <div className="h-2 bg-zinc-800 rounded w-1/2 animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   const onSelectSong = (selectedSong: any) => {
     if (selectedSong.album && selectedSong.album._id) {
@@ -96,7 +125,9 @@ const SearchBar = () => {
 
       {open && query && (
         <div className="absolute left-0 right-0 mt-2 bg-zinc-900 border border-zinc-700 rounded-md shadow-lg z-20">
-          {results.length === 0 ? (
+          {loading ? (
+            dataLoading()
+          ) : results.length === 0 ? (
             <div className="p-2 text-sm text-zinc-400">Không có kết quả</div>
           ) : (
             <div>
