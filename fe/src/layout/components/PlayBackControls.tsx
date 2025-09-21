@@ -1,12 +1,11 @@
 import { Button } from "@/components/ui/button";
 import { Slider } from "@/components/ui/slider";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import { FaPlay, FaPause } from "react-icons/fa6";
 import {
   Laptop2,
   ListMusic,
   Mic2,
-  Pause,
-  Play,
   Repeat,
   Shuffle,
   SkipBack,
@@ -133,9 +132,9 @@ const PlayBackControls = () => {
               disabled={!currentSong}
             >
               {isPlaying ? (
-                <Pause className="size-5" />
+                <FaPause className="size-5" />
               ) : (
-                <Play className="size-5" />
+                <FaPlay className="size-5" />
               )}
             </Button>
 

@@ -7,9 +7,9 @@ const Header = () => {
       <div className="flex items-center gap-3 mb-8">
         <Link to="/" className="rounded-lg">
           <img
-            src="/spotify.png"
-            alt="spotify-logo"
-            className="size-10 text-black"
+            src="/swLogo2.png"
+            alt="soundwave-logo"
+            className="size-14 text-black"
           />
         </Link>
         <div>

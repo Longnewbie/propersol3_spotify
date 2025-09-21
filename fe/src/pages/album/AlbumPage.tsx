@@ -2,7 +2,8 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { usePlayerStore } from "@/stores/usePlayerStore";
-import { Clock, Pause, Play } from "lucide-react";
+import { Clock } from "lucide-react";
+import { FaPlay, FaPause } from "react-icons/fa6";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import AlbumPageSkeleton from "./AlbumPageSkeleton";
@@ -85,16 +86,16 @@ const AlbumPage = () => {
               <Button
                 onClick={handlePlayAlbum}
                 size="icon"
-                className="w-14 h-14 rounded-full bg-green-500 hover:bg-green-400
+                className="size-12 rounded-full bg-green-500 hover:bg-green-400
                 hover:scale-105 transition-all"
               >
                 {isPlaying &&
                 currentAlbum?.songs.some(
                   (song) => song._id === currentSong?._id
                 ) ? (
-                  <Pause className="h-7 w-7 text-black" />
+                  <FaPause className="h-7 w-7 text-black" />
                 ) : (
-                  <Play className="h-7 w-7 text-black" />
+                  <FaPlay className="h-7 w-7 text-black" />
                 )}
               </Button>
             </div>
@@ -136,7 +137,7 @@ const AlbumPage = () => {
                             </span>
                           )}
                           {!isCurrentSong && (
-                            <Play className="size-4 hidden group-hover:block" />
+                            <FaPlay className="size-4 hidden group-hover:block" />
                           )}
                         </div>
 
