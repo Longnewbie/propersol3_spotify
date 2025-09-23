@@ -26,7 +26,8 @@ const LeftSidebar = () => {
               buttonVariants({
                 variant: "ghost",
                 className:
-                  "w-full justify-start text-white hover:bg-zinc-800 flex items-center gap-2",
+                  // centered on mobile, left-aligned on sm+
+                  "w-full justify-center sm:justify-start text-white hover:bg-zinc-800 flex items-center gap-2",
               })
             )}
           >
@@ -42,7 +43,7 @@ const LeftSidebar = () => {
                 buttonVariants({
                   variant: "ghost",
                   className:
-                    "w-full justify-start text-white hover:bg-zinc-800 flex items-center gap-2",
+                    "w-full justify-center sm:justify-start text-white hover:bg-zinc-800 flex items-center gap-2",
                 })
               )}
             >
@@ -56,7 +57,7 @@ const LeftSidebar = () => {
       {/* library section */}
       <div className="flex-1 rounded-lg bg-zinc-900 p-2 sm:p-4">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
-          <div className="flex items-center text-white px-1 sm:px-2">
+          <div className="flex items-center text-white px-1 sm:px-2 justify-center sm:justify-start">
             <Library className="size-5 sm:size-6 mr-1 sm:mr-2" />
             <span className="hidden sm:inline">Playlists</span>
           </div>
@@ -71,7 +72,7 @@ const LeftSidebar = () => {
                 <Link
                   to={`/albums/${album._id}`}
                   key={album._id}
-                  className="p-2 hover:bg-zinc-800 rounded-md flex items-center gap-2 sm:gap-3 group cursor-pointer"
+                  className="p-1 sm:p-2 hover:bg-zinc-800 rounded-md flex items-center gap-2 sm:gap-3 group cursor-pointer justify-center sm:justify-start"
                 >
                   <img
                     src={album.imageUrl}
