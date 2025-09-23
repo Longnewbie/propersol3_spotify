@@ -18,7 +18,7 @@ const LeftSidebar = () => {
   return (
     <div className="h-full flex flex-col gap-2">
       {/* navigation menu */}
-      <div className="rounded-lg bg-zinc-900 p-2 sm:p-2">
+      <div className="rounded-lg bg-zinc-900 p-4 sm:p-2">
         <div className="space-y-1 sm:space-y-2">
           <Link
             to={"/"}
