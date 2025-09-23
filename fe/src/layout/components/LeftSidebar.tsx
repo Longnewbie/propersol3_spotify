@@ -18,19 +18,21 @@ const LeftSidebar = () => {
   return (
     <div className="h-full flex flex-col gap-2">
       {/* navigation menu */}
-      <div className="rounded-lg bg-zinc-900 p-4">
-        <div className="space-y-2">
+      <div className="rounded-lg bg-zinc-900 p-2 sm:p-4">
+        <div className="space-y-1 sm:space-y-2">
           <Link
             to={"/"}
             className={cn(
               buttonVariants({
                 variant: "ghost",
-                className: "w-full justify-start text-white hover:bg-zinc-800",
+                className:
+                  "w-full justify-start text-white hover:bg-zinc-800 flex items-center gap-2",
               })
             )}
           >
-            <HomeIcon className="mr-2 size-5" />
-            <span className="hidden md:inline">Home</span>
+            <HomeIcon className="size-5 sm:size-6" />
+            {/* Tablet & Desktop: có text */}
+            <span className="hidden sm:inline">Home</span>
           </Link>
 
           <SignedIn>
@@ -40,28 +42,28 @@ const LeftSidebar = () => {
                 buttonVariants({
                   variant: "ghost",
                   className:
-                    "w-full justify-start text-white hover:bg-zinc-800",
+                    "w-full justify-start text-white hover:bg-zinc-800 flex items-center gap-2",
                 })
               )}
             >
-              <MessageCircle className="mr-2 size-5" />
-              <span className="hidden md:inline">Messages</span>
+              <MessageCircle className="size-5 sm:size-6" />
+              <span className="hidden sm:inline">Messages</span>
             </Link>
           </SignedIn>
         </div>
       </div>
 
-      {/* library section  */}
-      <div className="flex-1 rounded-lg bg-zinc-900 p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center text-white px-2">
-            <Library className="size-5 mr-2" />
-            <span className="hidden md:inline">Playlists</span>
+      {/* library section */}
+      <div className="flex-1 rounded-lg bg-zinc-900 p-2 sm:p-4">
+        <div className="flex items-center justify-between mb-3 sm:mb-4">
+          <div className="flex items-center text-white px-1 sm:px-2">
+            <Library className="size-5 sm:size-6 mr-1 sm:mr-2" />
+            <span className="hidden sm:inline">Playlists</span>
           </div>
         </div>
 
-        <ScrollArea className="h-[calc(100vh-300px)]">
-          <div className="space-y-2">
+        <ScrollArea className="h-[calc(100vh-280px)] pr-1 sm:pr-4">
+          <div className="space-y-1 sm:space-y-2">
             {isLoading ? (
               <PlaylistSkeleton />
             ) : (
@@ -69,17 +71,20 @@ const LeftSidebar = () => {
                 <Link
                   to={`/albums/${album._id}`}
                   key={album._id}
-                  className="p-2 hover:bg-zinc-800 rounded-md flex items-center gap-3 group cursor-pointer"
+                  className="p-2 hover:bg-zinc-800 rounded-md flex items-center gap-2 sm:gap-3 group cursor-pointer"
                 >
                   <img
                     src={album.imageUrl}
                     alt="playlist img"
-                    className="size-12 rounded-md flex-shrink-0 object-cover"
+                    className="size-11 sm:size-12 rounded-md flex-shrink-0 object-cover"
                   />
 
-                  <div className="flex-1 min-w-0 hidden md:block">
-                    <p className="font-medium line-clamp-2">{album.title}</p>
-                    <p className="text-sm text-zinc-400 truncate">
+                  {/* Mobile, Tablet */}
+                  <div className="flex-1 min-w-0 hidden sm:block">
+                    <p className="font-medium text-sm md:text-base ">
+                      {album.title}
+                    </p>
+                    <p className="hidden md:block text-sm text-zinc-400 truncate">
                       Album • {album.artist}
                     </p>
                   </div>
