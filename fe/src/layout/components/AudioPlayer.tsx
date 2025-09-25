@@ -1,3 +1,4 @@
+import { useMediaSession } from "@/hooks/useMediaSession";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useEffect, useRef } from "react";
 
@@ -6,6 +7,17 @@ const AudioPlayer = () => {
   const prevSongRef = useRef<string | null>(null);
 
   const { isPlaying, currentSong, playNext, repeatMode } = usePlayerStore();
+
+  useMediaSession(
+    currentSong
+      ? {
+          title: currentSong.title,
+          artist: currentSong.artist,
+          albumId: currentSong.albumId || "",
+          imageUrl: currentSong.imageUrl,
+        }
+      : null
+  );
 
   // handle play/pause logic
   useEffect(() => {
