@@ -1,4 +1,5 @@
 import { useEffect } from "react";
+import { usePlayerStore } from "@/stores/usePlayerStore";
 
 interface Song {
   title: string;
@@ -8,6 +9,8 @@ interface Song {
 }
 
 export const useMediaSession = (song: Song | null) => {
+  const { togglePlay, playNext, playPrevious, isPlaying } = usePlayerStore();
+
   useEffect(() => {
     if (!song || !("mediaSession" in navigator)) return;
 
@@ -23,5 +26,26 @@ export const useMediaSession = (song: Song | null) => {
         { src: song.imageUrl, sizes: "512x512", type: "image/jpeg" },
       ],
     });
-  }, [song]);
+
+    // action media session
+    navigator.mediaSession.setActionHandler("play", () => {
+      if (!isPlaying) togglePlay();
+    });
+
+    navigator.mediaSession.setActionHandler("pause", () => {
+      if (isPlaying) togglePlay();
+    });
+
+    navigator.mediaSession.setActionHandler("previoustrack", () => {
+      playPrevious();
+    });
+
+    navigator.mediaSession.setActionHandler("nexttrack", () => {
+      playNext();
+    });
+
+    // Disable default search actions
+    navigator.mediaSession.setActionHandler("seekbackward", null);
+    navigator.mediaSession.setActionHandler("seekforward", null);
+  }, [song, isPlaying, togglePlay, playNext, playPrevious]);
 };
