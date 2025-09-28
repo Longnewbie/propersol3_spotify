@@ -95,6 +95,41 @@ export const createAlbum = async (req, res, next) => {
   }
 };
 
+export const updateSong = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { title, artist, duration, lyrics } = req.body;
+
+    if (!title || !artist) {
+      return res.status(400).json({
+        message: "Title and artist are required",
+      });
+    }
+
+    const updatedSong = await Song.findByIdAndUpdate(
+      id,
+      {
+        title: title.trim(),
+        artist: artist.trim(),
+        duration: duration || 0,
+        lyrics: lyrics || "",
+        updatedAt: new Date(),
+      },
+      { new: true, runValidators: true }
+    );
+
+    if (!updatedSong) {
+      return res.status(404).json({
+        message: "Song not found",
+      });
+    }
+
+    res.status(200).json(updatedSong);
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const deleteAlbum = async (req, res, next) => {
   try {
     const { id } = req.params;
