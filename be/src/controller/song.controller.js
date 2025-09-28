@@ -100,6 +100,8 @@ export const searchSongs = async (req, res, next) => {
       artist: s.artist,
       imageUrl: s.imageUrl,
       audioUrl: s.audioUrl,
+      // include lyrics if present in DB
+      lyrics: s.lyrics || "",
       album: s.albumId
         ? {
             _id: s.albumId._id,
@@ -110,6 +112,25 @@ export const searchSongs = async (req, res, next) => {
     }));
 
     res.status(200).json(mapped);
+  } catch (error) {
+    next(error);
+  }
+};
+
+// new: return the lyrics text (LRC or plain) for a single song
+export const getLyrics = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const song = await Song.findById(id).select("lyrics");
+    if (!song) return res.status(404).json({ message: "Song not found" });
+
+    // disable client caching for lyrics to avoid stale 304 responses
+    res.setHeader(
+      "Cache-Control",
+      "no-store, no-cache, must-revalidate, proxy-revalidate"
+    );
+
+    res.status(200).json({ lyrics: song.lyrics || "" });
   } catch (error) {
     next(error);
   }

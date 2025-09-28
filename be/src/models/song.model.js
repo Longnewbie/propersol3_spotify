@@ -27,6 +27,11 @@ const songScheme = new mongoose.Schema(
       ref: "Album",
       required: false,
     },
+    lyrics: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
   { timestamps: true }
 );

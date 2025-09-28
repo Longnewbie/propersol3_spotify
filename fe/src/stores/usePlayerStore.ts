@@ -11,6 +11,7 @@ interface PlayerStore {
   currentIndex: number;
   shuffle: boolean;
   repeatMode: RepeatMode;
+  currentTime: number; // Add this line
 
   initializeQueue: (songs: Song[]) => void;
   playAlbum: (songs: Song[], startIndex?: number) => void;
@@ -21,6 +22,7 @@ interface PlayerStore {
 
   toggleShuffle: () => void;
   cycleRepeatMode: () => void; // off -> all -> one -> off
+  setCurrentTime: (time: number) => void; // Add this action
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
@@ -30,6 +32,7 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   currentIndex: -1,
   shuffle: false,
   repeatMode: "off",
+  currentTime: 0, // Add initial state
 
   initializeQueue: (songs: Song[]) => {
     set({
@@ -230,5 +233,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
         s.repeatMode === "off" ? "all" : s.repeatMode === "all" ? "one" : "off";
       return { repeatMode: next };
     });
+  },
+
+  setCurrentTime: (time: number) => {
+    set({ currentTime: time });
   },
 }));

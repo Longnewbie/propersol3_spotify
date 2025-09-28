@@ -13,6 +13,7 @@ import {
   Volume1,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const formatTime = (time: number) => {
   const minutes = Math.floor(time / 60);
@@ -32,10 +33,12 @@ const PlayBackControls = () => {
     repeatMode,
     toggleShuffle,
     cycleRepeatMode,
+    currentTime,
+    setCurrentTime,
   } = usePlayerStore();
 
+  const navigate = useNavigate();
   const [volume, setVolume] = useState(75);
-  const [currentTime, setCurrentTime] = useState(0);
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
 
@@ -66,14 +69,16 @@ const PlayBackControls = () => {
       audio.removeEventListener("timeupdate", updateTime);
       audio.removeEventListener("loadedmetadata", updateDuration);
       audio.removeEventListener("ended", handleEnded);
-      audio.removeEventListener("ended", handleEnded);
       audio.removeEventListener("play", handlePlay);
       audio.removeEventListener("pause", handlePause);
     };
-  }, [currentSong]);
+  }, [currentSong, setCurrentTime]);
 
   const handleSeek = (value: number[]) => {
-    if (audioRef.current) audioRef.current.currentTime = value[0];
+    if (audioRef.current) {
+      audioRef.current.currentTime = value[0];
+      setCurrentTime(value[0]);
+    }
   };
 
   if (!currentSong) {
@@ -200,6 +205,9 @@ const PlayBackControls = () => {
               size={"icon"}
               variant={"ghost"}
               className="hover:text-white text-zinc-400"
+              onClick={() => navigate("/lyrics")}
+              title="Lời bài hát"
+              disabled={!currentSong}
             >
               <Mic2 className="size-4" />
             </Button>
@@ -278,6 +286,17 @@ const PlayBackControls = () => {
                 {currentSong.artist}
               </p>
             </div>
+
+            {/* Show Lyrics button - navigates to lyrics page */}
+            <Button
+              size="icon"
+              variant="ghost"
+              className="text-zinc-400 hover:text-white transition-colors"
+              onClick={() => navigate("/lyrics")}
+              disabled={!currentSong}
+            >
+              <Mic2 className="size-5" />
+            </Button>
 
             {/* Volume Control - Tablet only */}
             <div className="hidden sm:flex lg:hidden items-center justify-center gap-3">
