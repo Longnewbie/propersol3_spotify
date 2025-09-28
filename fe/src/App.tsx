@@ -30,7 +30,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/albums/:albumId" element={<AlbumPage />} />
-          <Route path="/lyrics" element={<LyricsPage />} />
+          <Route path="/:id/lyrics" element={<LyricsPage />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Route>
       </Routes>

@@ -5,10 +5,11 @@ import { Button } from "@/components/ui/button";
 import { ArrowLeft, Music } from "lucide-react";
 import { cn } from "@/lib/utils";
 import NotFoundPage from "@/pages/404/NotFoundPage";
+import { Song } from "@/types";
 
 // Reuse the same parseLRC function from original PlayBackControls
 const parseLRC = (raw: string) => {
-  if (!raw) return [{ time: 0, text: "No lyrics available" }];
+  if (!raw) return [{ time: 0, text: "Lời bài hát chưa có sẵn" }];
   const lines: { time: number; text: string }[] = [];
   const timeRegex = /\[(\d{1,2}):(\d{2})(?:\.(\d{1,3}))?\]/g;
 
@@ -65,15 +66,13 @@ const LyricsPage = () => {
       setLyricsLines([]);
       return;
     }
-
-    const id = (currentSong as any)._id || (currentSong as any).id;
-    if (!id) {
+    if (!currentSong._id) {
       setLyricsLines([{ time: 0, text: "Lời bài hát chưa có sẵn" }]);
       return;
     }
 
     // if the song object already contains lyrics from the DB, use it directly
-    const existingLyrics = (currentSong as any).lyrics;
+    const existingLyrics = (currentSong as Song).lyrics;
     if (
       existingLyrics &&
       typeof existingLyrics === "string" &&
@@ -86,7 +85,9 @@ const LyricsPage = () => {
 
     const fetchLyrics = async () => {
       try {
-        const response = await axiosInstance.get(`/api/songs/${id}/lyrics`);
+        const response = await axiosInstance.get(
+          `/songs/${currentSong._id}/lyrics`
+        );
         const raw = (response.data && response.data.lyrics) || "";
         setLyricsLines(parseLRC(raw));
         setCurrentLyricIndex(0);

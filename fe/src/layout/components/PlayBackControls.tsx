@@ -205,7 +205,7 @@ const PlayBackControls = () => {
               size={"icon"}
               variant={"ghost"}
               className="hover:text-white text-zinc-400"
-              onClick={() => navigate("/lyrics")}
+              onClick={() => navigate(`/${currentSong._id}/lyrics`)}
               title="Lời bài hát"
               disabled={!currentSong}
             >
@@ -292,7 +292,7 @@ const PlayBackControls = () => {
               size="icon"
               variant="ghost"
               className="text-zinc-400 hover:text-white transition-colors"
-              onClick={() => navigate("/lyrics")}
+              onClick={() => navigate(`/${currentSong._id}/lyrics`)}
               disabled={!currentSong}
             >
               <Mic2 className="size-5" />
