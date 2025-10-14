@@ -53,7 +53,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const res = await axiosInstance.get("/users");
       set({ users: res.data });
     } catch (error: any) {
-      set({ error: error.res.data.message });
+      set({ error: error.response.data.message });
     } finally {
       set({ isLoading: false });
     }
@@ -138,7 +138,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       const res = await axiosInstance.get(`/users/messages/${userId}`);
       set({ messages: res.data });
     } catch (error: any) {
-      set({ error: error.res.data.message });
+      set({ error: error.response.data.message });
     } finally {
       set({ isLoading: false });
     }

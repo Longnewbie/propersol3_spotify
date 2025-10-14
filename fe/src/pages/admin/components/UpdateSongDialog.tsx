@@ -42,18 +42,6 @@ const UpdateSongDialog = ({
     lyrics: "",
   });
 
-  // Reset form when dialog is closed
-  useEffect(() => {
-    if (!open) {
-      setFormData({
-        title: "",
-        artist: "",
-        duration: 0,
-        lyrics: "",
-      });
-    }
-  }, [open]);
-
   // Reset form when song changes
   useEffect(() => {
     if (song) {
