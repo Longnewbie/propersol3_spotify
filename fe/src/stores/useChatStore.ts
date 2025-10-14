@@ -22,12 +22,13 @@ interface ChatStore {
   setSelectedUser: (user: User | null) => void;
 }
 
-const baseURL =
-  import.meta.env.MODE === "development" ? "http://localhost:5000" : "/";
+const baseURL = import.meta.env.VITE_SERVER_URL;
 
 const socket = io(baseURL, {
   autoConnect: false, // only connect if user is authenticated
   withCredentials: true,
+  transports: ["websocket"],
+  secure: baseURL.startsWith("https"),
 });
 
 export const useChatStore = create<ChatStore>((set, get) => ({

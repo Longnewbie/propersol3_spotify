@@ -4,9 +4,11 @@ import StatsCard from "./StatsCard";
 import { useEffect } from "react";
 
 const DashboardStats = () => {
-  const { stats } = useMusicStore();
+  const { stats, fetchStats } = useMusicStore();
 
-  useEffect(() => {}, [stats]);
+  useEffect(() => {
+    fetchStats();
+  }, [fetchStats]);
 
   const statsData = [
     {
