@@ -101,6 +101,7 @@ const UpdateSongDialog = ({
         lyrics: "",
       });
 
+      fetchSongs();
       toast.success("Song updated successfully");
       onOpenChange(false);
       if (onClose) onClose();
