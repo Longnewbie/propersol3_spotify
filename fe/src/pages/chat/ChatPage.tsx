@@ -112,9 +112,11 @@ const NoConversationPlaceholder = () => (
     />
     <div className="text-center">
       <h3 className="text-zinc-300 text-lg font-medium mb-1">
-        No conversation selected
+        Không có cuộc trò chuyện nào được chọn
       </h3>
-      <p className="text-zinc-500 text-sm">Choose a friend to start chatting</p>
+      <p className="text-zinc-500 text-sm">
+        Chọn một người bạn để bắt đầu trò chuyện
+      </p>
     </div>
   </div>
 );

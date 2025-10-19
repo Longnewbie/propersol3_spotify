@@ -7,6 +7,7 @@ import { FaPlay, FaPause } from "react-icons/fa6";
 import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import AlbumPageSkeleton from "./AlbumPageSkeleton";
+import AudioWave from "@/hooks/AudioWave";
 
 interface AlbumContentProps {
   currentAlbum: {
@@ -127,7 +128,7 @@ const AlbumContent = ({
               <span className="font-medium text-white">
                 {currentAlbum?.artist}
               </span>
-              <span> • {currentAlbum?.songs.length} songs</span>
+              <span> • {currentAlbum?.songs.length} bài hát</span>
               <span> • {currentAlbum?.releaseYear} </span>
             </div>
           </div>
@@ -156,8 +157,8 @@ const AlbumContent = ({
           {/* table header */}
           <div className="hidden md:grid grid-cols-[16px_4fr_2fr_1fr] gap-4 px-10 py-2 text-sm text-zinc-400 border-b border-white/5">
             <div>#</div>
-            <div>Title</div>
-            <div>Released Date</div>
+            <div>Tiêu đề</div>
+            <div>Ngày phát hành</div>
             <div className="flex justify-end">
               <Clock className="size-[18px]" />
             </div>
@@ -178,7 +179,7 @@ const AlbumContent = ({
                   >
                     <div className="flex items-center justify-center">
                       {isCurrentSong && isPlaying ? (
-                        <div className="size-4 text-green-500">♫</div>
+                        <AudioWave color="bg-green-400" />
                       ) : (
                         <span className="group-hover:hidden">{index + 1}</span>
                       )}
@@ -203,7 +204,7 @@ const AlbumContent = ({
 
                     {/* Mobile: hide release date, only duration */}
                     <div className="hidden md:flex items-center">
-                      {song.createdAt.split("T")[0]}
+                      {new Intl.DateTimeFormat("en-GB").format(new Date(song.createdAt))}
                     </div>
                     <div className="flex items-center justify-end">
                       {formatDuration(song.duration)}

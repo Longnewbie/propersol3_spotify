@@ -108,7 +108,7 @@ const SongsTable = () => {
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-zinc-800/50">
-              <TableHead className="w-[50px]"></TableHead>
+              <TableHead className="w-[50px]">#</TableHead>
               <TableHead>Title</TableHead>
               <TableHead>Artist</TableHead>
               <TableHead>Release Date</TableHead>

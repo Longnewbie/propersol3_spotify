@@ -9,21 +9,35 @@ export const initializeSocket = (server) => {
     },
   });
 
-  const userSockets = new Map(); // { userId: socketId }
+  const userSockets = new Map(); // { userId: socket.id }
   const userActivities = new Map(); // { userId: activity }
 
   io.on("connection", (socket) => {
-    socket.on("user_connected", (userId) => {
-      userSockets.set(userId, socket.id);
-      userActivities.set(userId, "Idle");
+    // Lấy userId từ handshake.auth
+    // Client đã gửi nó qua "socket.auth = { userId }"
+    const userId = socket.handshake.auth.userId;
 
-      // broadcast to all connected sockets that this user just logged in
-      io.emit("user_connected", userId);
+    // Nếu client kết nối mà không gửi userId, ngắt kết nối họ
+    if (!userId) {
+      console.log("Socket connection attempt without userId. Disconnecting.");
+      return socket.disconnect();
+    }
 
-      socket.emit("users_online", Array.from(userSockets.keys()));
+    // Lưu userId vào chính socket để dùng khi disconnect
+    socket.userId = userId;
 
-      io.emit("activities", Array.from(userActivities.entries()));
-    });
+    // Thêm user vào các map
+    userSockets.set(userId, socket.id);
+    userActivities.set(userId, "Idle");
+
+    // Gửi sự kiện user kết nối tới TẤT CẢ client
+    io.emit("user_connected", userId);
+
+    // Gửi danh sách user đang online CHỈ cho client vừa kết nối
+    socket.emit("users_online", Array.from(userSockets.keys()));
+
+    // Gửi danh sách TẤT CẢ hoạt động tới TẤT CẢ client (để user mới cũng nhận được)
+    io.emit("activities", Array.from(userActivities.entries()));
 
     socket.on("update_activity", ({ userId, activity }) => {
       console.log("update_activity", userId, activity);
@@ -41,12 +55,13 @@ export const initializeSocket = (server) => {
           content,
         });
 
-        // send to receiver in real-time, if they are online
+        // Gửi cho người nhận
         const receiverSocketId = userSockets.get(receiverId);
         if (receiverSocketId) {
           io.to(receiverSocketId).emit("receive_message", message);
         }
 
+        // Gửi xác nhận cho người gửi
         socket.emit("message_sent", message);
       } catch (error) {
         console.error("Error message: ", error);
@@ -55,18 +70,16 @@ export const initializeSocket = (server) => {
     });
 
     socket.on("disconnect", () => {
-      let disconnectedUserId;
+      // Lấy userId trực tiếp từ socket, không cần lặp
+      const disconnectedUserId = socket.userId;
 
-      for (const [userId, socketId] of userSockets.entries()) {
-        // find disconnected user
-        if (socketId === socket.id) {
-          disconnectedUserId = userId;
-          userSockets.delete(userId);
-          userActivities.delete(userId);
-          break;
-        }
-      }
       if (disconnectedUserId) {
+        // Xóa user khỏi các map
+        userSockets.delete(disconnectedUserId);
+        userActivities.delete(disconnectedUserId);
+
+        // Thông báo cho các client khác biết user này đã offline
+        console.log(`User ${disconnectedUserId} disconnected.`);
         io.emit("user_disconnected", disconnectedUserId);
       }
     });
