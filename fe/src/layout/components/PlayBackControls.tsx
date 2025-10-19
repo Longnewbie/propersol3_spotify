@@ -3,23 +3,35 @@ import { Slider } from "@/components/ui/slider";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { FaPlay, FaPause } from "react-icons/fa6";
 import {
-  Laptop2,
+  Heart,
   ListMusic,
+  LogIn,
   Mic2,
   Repeat,
   Shuffle,
   SkipBack,
   SkipForward,
   Volume1,
+  Volume2,
+  VolumeX,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import { useAuthStore } from "@/stores/useAuthStore";
+import toast from "react-hot-toast";
 
 const formatTime = (time: number) => {
   const minutes = Math.floor(time / 60);
   const seconds = Math.floor(time % 60);
 
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
+};
+
+const repeatModeTooltips = {
+  off: "Bật lặp lại tất cả",
+  all: "Bật lặp lại một bài",
+  one: "Tắt lặp lại",
 };
 
 const PlayBackControls = () => {
@@ -37,10 +49,20 @@ const PlayBackControls = () => {
     setCurrentTime,
   } = usePlayerStore();
 
+  const { userId } = useAuth();
+  const { favoriteSongIds, fetchFavorites, toggleFavorite } = useAuthStore();
   const navigate = useNavigate();
   const [volume, setVolume] = useState(75);
+  const [lastVolume, setLastVolume] = useState(75); // Thêm state để nhớ âm lượng
   const [duration, setDuration] = useState(0);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  // khi user login thì lấy ds yêu thích
+  useEffect(() => {
+    if (userId) {
+      fetchFavorites();
+    }
+  }, [userId, fetchFavorites]);
 
   useEffect(() => {
     audioRef.current = document.querySelector("audio");
@@ -48,6 +70,9 @@ const PlayBackControls = () => {
     const audio = audioRef.current;
 
     if (!audio) return;
+
+    // Set âm lượng ban đầu
+    audio.volume = volume / 100;
 
     const updateTime = () => setCurrentTime(audio.currentTime);
     const updateDuration = () => setDuration(audio.duration);
@@ -72,12 +97,61 @@ const PlayBackControls = () => {
       audio.removeEventListener("play", handlePlay);
       audio.removeEventListener("pause", handlePause);
     };
-  }, [currentSong, setCurrentTime]);
+  }, [currentSong, setCurrentTime, volume]); // Thêm volume vào dependency
 
   const handleSeek = (value: number[]) => {
     if (audioRef.current) {
       audioRef.current.currentTime = value[0];
       setCurrentTime(value[0]);
+    }
+  };
+
+  const handleVolumeChange = (value: number) => {
+    setVolume(value);
+    if (value > 0) {
+      setLastVolume(value); // Lưu lại giá trị nếu nó lớn hơn 0
+    }
+    if (audioRef.current) {
+      audioRef.current.volume = value / 100;
+    }
+  };
+
+  const toggleMute = () => {
+    if (volume === 0) {
+      handleVolumeChange(lastVolume);
+    } else {
+      handleVolumeChange(0);
+    }
+  };
+
+  const isLiked = currentSong ? favoriteSongIds.has(currentSong._id) : false;
+
+  const handleLike = () => {
+    if (!userId) {
+      toast.error("Đăng nhập để thêm vào danh sách yêu thích.", {
+        icon: <LogIn className="size-5 text-white" />,
+        style: {
+          borderRadius: "12px",
+          background: "linear-gradient(135deg, #2a2a2a, #1a1a1a)",
+          color: "#fff",
+          boxShadow: "0 4px 15px rgba(0, 0, 0, 0.4)",
+          fontSize: "15px",
+          fontWeight: 500,
+          padding: "12px 16px",
+          display: "flex",
+          alignItems: "center",
+          gap: "10px",
+        },
+        iconTheme: {
+          primary: "#fff",
+          secondary: "#2a2a2a",
+        },
+        position: "top-center",
+      });
+      return;
+    }
+    if (currentSong) {
+      toggleFavorite(currentSong._id);
     }
   };
 
@@ -123,7 +197,7 @@ const PlayBackControls = () => {
                   shuffle ? "text-amber-400" : "text-zinc-400 hover:text-white"
                 }`}
                 onClick={toggleShuffle}
-                title="Shuffle"
+                title="Bật trộn bài"
               >
                 <Shuffle className="size-4" />
               </Button>
@@ -134,6 +208,7 @@ const PlayBackControls = () => {
                 className="hover:text-white text-zinc-400"
                 onClick={playPrevious}
                 disabled={!currentSong}
+                title="Trước"
               >
                 <SkipBack className="size-4" />
               </Button>
@@ -143,6 +218,7 @@ const PlayBackControls = () => {
                 className="bg-white hover:bg-white/80 text-black rounded-full size-8"
                 onClick={togglePlay}
                 disabled={!currentSong}
+                title={`${isPlaying ? "Tạm dừng" : "Phát"}`}
               >
                 {isPlaying ? (
                   <FaPause className="size-5" />
@@ -157,6 +233,7 @@ const PlayBackControls = () => {
                 className="hover:text-white text-zinc-400"
                 onClick={playNext}
                 disabled={!currentSong}
+                title="Tiếp"
               >
                 <SkipForward className="size-4" />
               </Button>
@@ -170,7 +247,7 @@ const PlayBackControls = () => {
                     : "text-zinc-400 hover:text-white"
                 }`}
                 onClick={cycleRepeatMode}
-                title={`Repeat: ${repeatMode}`}
+                title={repeatModeTooltips[repeatMode] || "Lặp lại"}
               >
                 <Repeat className="size-4" />
                 {repeatMode === "one" && (
@@ -216,6 +293,8 @@ const PlayBackControls = () => {
               size={"icon"}
               variant={"ghost"}
               className="hover:text-white text-zinc-400"
+              onClick={() => navigate(`/albums/${currentSong?.albumId}`)}
+              title="Danh sách phát"
             >
               <ListMusic className="size-4" />
             </Button>
@@ -223,17 +302,32 @@ const PlayBackControls = () => {
             <Button
               size={"icon"}
               variant={"ghost"}
-              className="hover:text-white text-zinc-400"
+              className={`transition-colors ${
+                isLiked
+                  ? "text-red-500 fill-red-500" // Trạng thái đã like
+                  : "text-zinc-400 hover:text-white" // Trạng thái chưa like
+              }`}
+              onClick={handleLike} // Thêm onClick
+              disabled={!currentSong} // Vô hiệu hóa khi không có bài hát
+              title={isLiked ? "Xóa khỏi Yêu thích" : "Thêm vào Yêu thích"}
             >
-              <Laptop2 className="size-4" />
+              <Heart className={`size-4 ${isLiked ? "fill-red-500" : ""}`} />
             </Button>
 
             <Button
               size={"icon"}
               variant={"ghost"}
               className="hover:text-white text-zinc-400"
+              onClick={toggleMute}
+              title={volume === 0 ? "Hủy tắt tiếng" : "Tắt tiếng"}
             >
-              <Volume1 className="size-4" />
+              {volume === 0 ? (
+                <VolumeX className="size-4" />
+              ) : volume <= 50 ? (
+                <Volume1 className="size-4" />
+              ) : (
+                <Volume2 className="size-4" />
+              )}
             </Button>
 
             <Slider
@@ -241,12 +335,7 @@ const PlayBackControls = () => {
               max={100}
               step={1}
               className="w-24 hover:cursor-grab active:cursor-grabbing"
-              onValueChange={(value) => {
-                setVolume(value[0]);
-                if (audioRef.current) {
-                  audioRef.current.volume = value[0] / 100;
-                }
-              }}
+              onValueChange={(value) => handleVolumeChange(value[0])}
             />
           </div>
         </div>
@@ -300,18 +389,25 @@ const PlayBackControls = () => {
 
             {/* Volume Control - Tablet only */}
             <div className="hidden sm:flex lg:hidden items-center justify-center gap-3">
-              <Volume1 className="size-4 text-zinc-400" />
+              <Button
+                size="icon"
+                variant="ghost"
+                className="text-zinc-400 hover:text-white"
+                onClick={toggleMute}
+                title={volume === 0 ? "Unmute" : "Mute"}
+              >
+                {volume === 0 ? (
+                  <VolumeX className="size-4" />
+                ) : (
+                  <Volume1 className="size-4" />
+                )}
+              </Button>
               <Slider
                 value={[volume]}
                 max={100}
                 step={1}
                 className="w-32 hover:cursor-grab active:cursor-grabbing"
-                onValueChange={(value) => {
-                  setVolume(value[0]);
-                  if (audioRef.current) {
-                    audioRef.current.volume = value[0] / 100;
-                  }
-                }}
+                onValueChange={(value) => handleVolumeChange(value[0])}
               />
               <span className="text-xs text-zinc-400 w-8 text-right">
                 {volume}

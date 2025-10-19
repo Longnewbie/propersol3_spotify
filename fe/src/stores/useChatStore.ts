@@ -64,7 +64,7 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       socket.auth = { userId };
       socket.connect();
 
-      socket.emit("user_connected", userId);
+      // socket.emit("user_connected", userId);
 
       socket.on("users_online", (users: string[]) => {
         set({ onlineUsers: new Set(users) });

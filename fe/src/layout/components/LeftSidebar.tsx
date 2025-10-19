@@ -3,7 +3,7 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SignedIn } from "@clerk/clerk-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { HomeIcon, Library, MessageCircle } from "lucide-react";
+import { BookHeart, HomeIcon, Library, MessageCircle } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import { useMusicStore } from "@/stores/useMusicStore";
@@ -33,7 +33,7 @@ const LeftSidebar = () => {
           >
             <HomeIcon className="size-5 sm:size-6" />
             {/* Tablet & Desktop: có text */}
-            <span className="hidden sm:inline">Home</span>
+            <span className="hidden sm:inline">Trang chủ</span>
           </Link>
 
           <SignedIn>
@@ -48,14 +48,27 @@ const LeftSidebar = () => {
               )}
             >
               <MessageCircle className="size-5 sm:size-6" />
-              <span className="hidden sm:inline">Messages</span>
+              <span className="hidden sm:inline">Tin nhắn</span>
+            </Link>
+            <Link
+              to={"/favorites"}
+              className={cn(
+                buttonVariants({
+                  variant: "ghost",
+                  className:
+                    "w-full justify-center sm:justify-start text-white hover:bg-zinc-800 flex items-center gap-2",
+                })
+              )}
+            >
+              <BookHeart className="size-5 sm:size-6" />
+              <span className="hidden sm:inline">Bài hát đã thích</span>
             </Link>
           </SignedIn>
         </div>
       </div>
 
       {/* library section */}
-      <div className="flex-1 rounded-lg bg-zinc-900 p-2 sm:p-4">
+      <div className="flex flex-col min-h-0 flex-1 rounded-lg bg-zinc-900 p-2 sm:p-4">
         <div className="flex items-center justify-between mb-3 sm:mb-4">
           <div className="flex items-center text-white px-1 sm:px-2 justify-center sm:justify-start">
             <Library className="size-5 sm:size-6 mr-1 sm:mr-2" />
@@ -63,7 +76,7 @@ const LeftSidebar = () => {
           </div>
         </div>
 
-        <ScrollArea className="lg:h-[calc(100vh-280px)] h-[calc(100vh-350px)] pr-1 sm:pr-4">
+        <ScrollArea className="flex-1 pr-1 sm:pr-4">
           <div className="space-y-1 sm:space-y-2">
             {isLoading ? (
               <PlaylistSkeleton />

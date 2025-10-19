@@ -227,13 +227,21 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
     set((s) => ({ shuffle: !s.shuffle }));
   },
 
-  cycleRepeatMode: () => {
-    set((s) => {
-      const next: RepeatMode =
-        s.repeatMode === "off" ? "all" : s.repeatMode === "all" ? "one" : "off";
-      return { repeatMode: next };
-    });
-  },
+  cycleRepeatMode: () =>
+  set((state) => {
+    // 1. Nếu đang là "Lặp lại tất cả" -> chuyển sang "Lặp lại một bài"
+    if (state.repeatMode === "all") {
+      return { repeatMode: "one" };
+    }
+    
+    // 2. Nếu đang là "Lặp lại một bài" -> chuyển sang "Tắt"
+    if (state.repeatMode === "one") {
+      return { repeatMode: "off" };
+    }
+    
+    // 3. Nếu đang là "Tắt" (hoặc bất cứ gì khác) -> chuyển về "Lặp lại tất cả"
+    return { repeatMode: "all" };
+  }),
 
   setCurrentTime: (time: number) => {
     set({ currentTime: time });

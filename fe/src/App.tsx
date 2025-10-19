@@ -10,6 +10,7 @@ import AdminPage from "./pages/admin/AdminPage";
 import { Toaster } from "react-hot-toast";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import LyricsPage from "./layout/components/LyricsPage";
+import FavoritesList from "./pages/favorite/FavoritesList";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/chat" element={<ChatPage />} />
           <Route path="/albums/:albumId" element={<AlbumPage />} />
+          <Route path="/favorites" element={<FavoritesList />} />
           <Route path="/:id/lyrics" element={<LyricsPage />} />
           <Route path="/*" element={<NotFoundPage />} />
         </Route>
