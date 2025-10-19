@@ -13,28 +13,28 @@ const DashboardStats = () => {
   const statsData = [
     {
       icon: ListMusic,
-      label: "Total Songs",
+      label: "Tổng bài hát",
       value: stats.totalSongs.toString(),
       bgColor: "bg-emerald-500/10",
       iconColor: "text-emerald-500",
     },
     {
       icon: Library,
-      label: "Total Albums",
+      label: "Tổng Albums",
       value: stats.totalAlbums.toString(),
       bgColor: "bg-violet-500/10",
       iconColor: "text-violet-500",
     },
     {
       icon: Users2,
-      label: "Total Artists",
+      label: "Tổng nghệ sĩ",
       value: stats.totalArtists.toString(),
       bgColor: "bg-orange-500/10",
       iconColor: "text-orange-500",
     },
     {
       icon: PlayCircle,
-      label: "Total Users",
+      label: "Tổng người dùng",
       value: stats.totalUsers.toLocaleString(),
       bgColor: "bg-sky-500/10",
       iconColor: "text-sky-500",

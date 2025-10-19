@@ -16,8 +16,8 @@ const FavoritesListSkeleton = () => {
       {/* Header skeleton */}
       <div className="bg-gradient-to-b from-amber-900/20 to-zinc-900 pt-16 pb-8 px-4 sm:px-8">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="bg-zinc-800/50 p-4 rounded-2xl w-24 h-24 animate-pulse" />
+          <div className="flex items-center gap-4 mb-6">
+            <div className="bg-zinc-800/50 p-4 rounded-2xl size-32 animate-pulse" />
             <div className="flex-1 space-y-3">
               <div className="h-4 bg-zinc-800/50 rounded w-24 animate-pulse" />
               <div className="h-8 bg-zinc-800/50 rounded w-48 animate-pulse" />

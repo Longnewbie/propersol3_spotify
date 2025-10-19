@@ -84,12 +84,14 @@ const AddAlbumDialog = () => {
       <DialogTrigger asChild>
         <Button className="bg-violet-500 hover:bg-violet-600 text-white">
           <Plus className="mr-2 size-4" />
-          Add Album
+          Thêm Album
         </Button>
       </DialogTrigger>
       <DialogContent className="bg-zinc-900 border-zinc-700">
-        <DialogTitle>Add new album</DialogTitle>
-        <DialogDescription>Add a new album your collection</DialogDescription>
+        <DialogTitle>Thêm Album mới</DialogTitle>
+        <DialogDescription>
+          Thêm Album mới vào bộ sưu tập của bạn
+        </DialogDescription>
         <div className="space-y-4 py-4">
           <input
             type="file"
@@ -111,34 +113,34 @@ const AddAlbumDialog = () => {
                 {imageFile ? imageFile.name : "Upload album artwork"}
               </div>
               <Button variant="outline" size="sm" className="text-xs">
-                Choose File
+                Chọn file
               </Button>
             </div>
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Album Title</label>
+            <label className="text-sm font-medium">Tiêu đề Album</label>
             <Input
               value={newAlbum.title}
               onChange={(e) =>
                 setNewAlbum({ ...newAlbum, title: e.target.value })
               }
               className="bg-zinc-800 border-zinc-700"
-              placeholder="Enter album title"
+              placeholder="Nhập tiêu đề Album"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Artist</label>
+            <label className="text-sm font-medium">Nghệ sĩ</label>
             <Input
               value={newAlbum.artist}
               onChange={(e) =>
                 setNewAlbum({ ...newAlbum, artist: e.target.value })
               }
               className="bg-zinc-800 border-zinc-700"
-              placeholder="Enter artist name"
+              placeholder="Nhập tên nghệ sĩ"
             />
           </div>
           <div className="space-y-2">
-            <label className="text-sm font-medium">Release Year</label>
+            <label className="text-sm font-medium">Năm phát hành</label>
             <Input
               type="number"
               value={newAlbum.releaseYear}
@@ -161,7 +163,7 @@ const AddAlbumDialog = () => {
             onClick={() => setAlbumDialogOpen(false)}
             disabled={isLoading}
           >
-            Cancel
+            Huỷ
           </Button>
           <Button
             onClick={handleSubmit}
@@ -170,7 +172,7 @@ const AddAlbumDialog = () => {
               isLoading || !imageFile || !newAlbum.title || !newAlbum.artist
             }
           >
-            {isLoading ? "Creating..." : "Add album"}
+            {isLoading ? "Đang tạo..." : "Thêm Album"}
           </Button>
         </DialogFooter>
       </DialogContent>

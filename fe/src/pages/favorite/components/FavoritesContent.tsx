@@ -33,9 +33,9 @@ const FavoritesContent = ({
       {/* Header */}
       <div className="bg-gradient-to-b from-amber-900/30 to-zinc-900 pt-16 pb-8 px-4 sm:px-8 border-b border-white/5">
         <div className="max-w-6xl mx-auto">
-          <div className="flex items-center gap-4 mb-4">
+          <div className="flex items-center gap-4 mb-6">
             <div className="bg-gradient-to-br from-amber-500 to-orange-600 p-4 rounded-2xl shadow-2xl shadow-amber-500/20">
-              <Heart className="size-14 text-white fill-white" />
+              <Heart className="size-24 text-white fill-white" />
             </div>
             <div>
               <p className="text-sm text-zinc-400 mb-1 uppercase tracking-wider font-semibold flex items-center gap-2">

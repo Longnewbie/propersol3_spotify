@@ -1,9 +1,10 @@
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import AudioWave from "@/hooks/AudioWave";
 import { useChatStore } from "@/stores/useChatStore";
 import { useUser } from "@clerk/clerk-react";
 import { AvatarFallback } from "@radix-ui/react-avatar";
-import { HeadphonesIcon, Music, User } from "lucide-react";
+import { HeadphonesIcon, User } from "lucide-react";
 import { useEffect } from "react";
 
 const FriendsActivity = () => {
@@ -57,9 +58,7 @@ const FriendsActivity = () => {
                       <span className="font-medium text-sm text-white">
                         {user.fullName}
                       </span>
-                      {isPlaying && (
-                        <Music className="size-3.5 text-emerald-400 shrink-0" />
-                      )}
+                      {isPlaying && <AudioWave color="bg-green-400" />}
                     </div>
                     {isPlaying ? (
                       <div className="mt-1">

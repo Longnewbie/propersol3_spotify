@@ -13,8 +13,8 @@ const Header = () => {
           />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold">Music Manager</h1>
-          <p className="text-zinc-400 mt-1">Manager your music catalog</p>
+          <h1 className="text-3xl font-bold">Quản lý nhạc</h1>
+          <p className="text-zinc-400 mt-1">Quản lý kho nhạc</p>
         </div>
       </div>
       <UserButton />

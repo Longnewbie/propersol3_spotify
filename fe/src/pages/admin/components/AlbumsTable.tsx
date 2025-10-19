@@ -23,11 +23,11 @@ const AlbumsTable = () => {
       <TableHeader>
         <TableRow className="hover:bg-zinc-800/50">
           <TableHead className="w-[50px]">#</TableHead>
-          <TableHead>Title</TableHead>
-          <TableHead>Artist</TableHead>
-          <TableHead>Release Year</TableHead>
-          <TableHead>Songs</TableHead>
-          <TableHead className="text-right">Actions</TableHead>
+          <TableHead>Tiêu đề</TableHead>
+          <TableHead>Nghệ sĩ</TableHead>
+          <TableHead>Năm phát hành</TableHead>
+          <TableHead>Tổng bài hát</TableHead>
+          <TableHead className="text-right">Thao tác</TableHead>
         </TableRow>
       </TableHeader>
 
@@ -44,7 +44,7 @@ const AlbumsTable = () => {
             <TableCell className="font-medium">{album.title}</TableCell>
             <TableCell>{album.artist}</TableCell>
             <TableCell>
-              <span className="inline-flex items-center gap-1 text-zinc-400">
+              <span className="inline-flex items-center gap-3 text-zinc-400">
                 <Calendar className="size-4" />
                 {album.releaseYear}
               </span>
@@ -52,7 +52,7 @@ const AlbumsTable = () => {
             <TableCell>
               <span className="inline-flex items-center gap-1 text-zinc-400">
                 <Music className="size-4" />
-                {album.songs.length} songs
+                {album.songs.length} bài hát
               </span>
             </TableCell>
             <TableCell className="text-right">
