@@ -119,39 +119,39 @@ const UpdateSongDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-zinc-900 border-zinc-700 max-h-[90vh] overflow-auto">
         <DialogHeader>
-          <DialogTitle className="text-zinc-100">Update Song</DialogTitle>
+          <DialogTitle className="text-zinc-100">Cập nhật bài hát</DialogTitle>
           <DialogDescription className="text-zinc-400">
-            Update the song information. Click save when you're done.
+            Cập nhật thông tin bài hát. Nhấp vào lưu khi hoàn tất.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-4 py-4">
           {/* Title */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-200">Title</label>
+            <label className="text-sm font-medium text-zinc-200">Tiêu đề</label>
             <Input
               value={formData.title}
               onChange={(e) => handleInputChange("title", e.target.value)}
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
-              placeholder="Song title"
+              placeholder="Tiêu đề bài hát"
             />
           </div>
 
           {/* Artist */}
           <div className="space-y-2">
-            <label className="text-sm font-medium text-zinc-200">Artist</label>
+            <label className="text-sm font-medium text-zinc-200">Nghệ sĩ</label>
             <Input
               value={formData.artist}
               onChange={(e) => handleInputChange("artist", e.target.value)}
               className="bg-zinc-800 border-zinc-700 text-zinc-100"
-              placeholder="Artist name"
+              placeholder="Tên nghệ sĩ"
             />
           </div>
 
           {/* Duration */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-zinc-200">
-              Duration (seconds)
+              Thời lượng (Giây)
             </label>
             <Input
               type="number"
@@ -168,13 +168,13 @@ const UpdateSongDialog = ({
           {/* Lyrics */}
           <div className="space-y-2">
             <label className="text-sm font-medium text-zinc-200">
-              Lyrics (Optional)
+              Lời bài hát (Không bắt buộc)
             </label>
             <Textarea
               value={formData.lyrics}
               onChange={(e) => handleInputChange("lyrics", e.target.value)}
               className="bg-zinc-800 border-zinc-700 text-zinc-100 min-h-[300px] resize-none"
-              placeholder="Enter song lyrics here..."
+              placeholder="Nhập lời bài hát tại đây..."
             />
           </div>
         </div>
@@ -187,7 +187,7 @@ const UpdateSongDialog = ({
             className="border-zinc-700 text-zinc-300 hover:bg-zinc-800"
             disabled={isLoading}
           >
-            Cancel
+            Huỷ
           </Button>
           <Button
             onClick={handleSubmit}
@@ -195,7 +195,7 @@ const UpdateSongDialog = ({
             className="bg-emerald-600 hover:bg-emerald-700 text-white"
           >
             {isLoading && <Loader className="mr-2 h-4 w-4 animate-spin" />}
-            {isLoading ? "Updating..." : "Update Song"}
+            {isLoading ? "Đang cập nhật..." : "Cập nhật"}
           </Button>
         </DialogFooter>
       </DialogContent>

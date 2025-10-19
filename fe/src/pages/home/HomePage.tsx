@@ -5,6 +5,7 @@ import FeaturedSection from "./components/FeaturedSection";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import SectionGrid from "./components/SectionGrid";
 import { usePlayerStore } from "@/stores/usePlayerStore";
+import Footer from "./components/Footer";
 
 const HomePage = () => {
   const {
@@ -58,6 +59,7 @@ const HomePage = () => {
               isLoading={isLoading}
             />
           </div>
+          <Footer />
         </div>
       </ScrollArea>
     </main>

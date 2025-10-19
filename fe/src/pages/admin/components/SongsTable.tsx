@@ -78,7 +78,7 @@ const SongsTable = () => {
           <Search className="absolute left-2 top-2.5 size-4 text-muted-foreground" />
           <Input
             type="text"
-            placeholder="Search song..."
+            placeholder="Tìm kiếm bài hát..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="pl-8 w-80"
@@ -90,7 +90,7 @@ const SongsTable = () => {
           size="icon"
           onClick={handleRefresh}
           disabled={loadingRefresh}
-          title="Refresh songs"
+          title="Làm mới"
         >
           <RefreshCw
             className={`size-4 ${
@@ -102,17 +102,17 @@ const SongsTable = () => {
 
       {isLoading ? (
         <div className="flex items-center justify-center py-8">
-          <div className="text-zinc-400">Loading songs...</div>
+          <div className="text-zinc-400">Đang tải dữ liệu...</div>
         </div>
       ) : (
         <Table>
           <TableHeader>
             <TableRow className="hover:bg-zinc-800/50">
               <TableHead className="w-[50px]">#</TableHead>
-              <TableHead>Title</TableHead>
-              <TableHead>Artist</TableHead>
-              <TableHead>Release Date</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Tiêu đề</TableHead>
+              <TableHead>Nghệ sĩ</TableHead>
+              <TableHead>Ngày phát hành</TableHead>
+              <TableHead className="text-right">Thao tác</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -132,7 +132,7 @@ const SongsTable = () => {
                   <TableCell>
                     <span className="inline-flex items-center gap-1 text-zinc-400">
                       <Calendar className="size-4" />
-                      {song.createdAt.split("T")[0]}
+                      {new Intl.DateTimeFormat("en-GB").format(new Date(song.createdAt))}
                     </span>
                   </TableCell>
 
@@ -165,7 +165,7 @@ const SongsTable = () => {
                   colSpan={5}
                   className="text-center text-zinc-500 py-6"
                 >
-                  No songs found.
+                  Bài hát không tìm thấy.
                 </TableCell>
               </TableRow>
             )}

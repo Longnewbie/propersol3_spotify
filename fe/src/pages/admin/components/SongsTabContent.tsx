@@ -14,12 +14,12 @@ const SongsTabContent = () => {
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
+          <div className="space-y-2">
             <CardTitle className="flex items-center gap-2">
               <Music className="size-5 text-emerald-500" />
-              Songs Library
+              Thư viện bài hát
             </CardTitle>
-            <CardDescription>Manager your music tracks</CardDescription>
+            <CardDescription>Quản lý các bài hát của bạn</CardDescription>
           </div>
           <AddSongDialog />
         </div>
