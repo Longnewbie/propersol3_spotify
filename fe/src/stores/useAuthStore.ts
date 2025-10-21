@@ -66,9 +66,9 @@ export const useAuthStore = create<AuthStore>((set, get) => ({
       console.error("Failed to toggle favorite:", error);
       const oldFavorites = new Set(get().favoriteSongIds);
       if (isFavorite) {
-        oldFavorites.add(songId); // Lúc nãy lỡ xóa, giờ thêm lại
+        oldFavorites.add(songId);
       } else {
-        oldFavorites.delete(songId); // Lúc nãy lỡ thêm, giờ xóa đi
+        oldFavorites.delete(songId);
       }
       set({
         favoriteSongIds: oldFavorites,

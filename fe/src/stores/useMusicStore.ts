@@ -12,6 +12,7 @@ interface MusicStore {
   featuredSongs: Song[];
   madeForYouSongs: Song[];
   trendingSongs: Song[];
+  hottestAlbums: Album[];
   stats: Stats;
 
   fetchAlbums: () => Promise<void>;
@@ -19,6 +20,7 @@ interface MusicStore {
   fetchFeaturedSongs: () => Promise<void>;
   fetchMadeForYouSongs: () => Promise<void>;
   fetchTrendingSongs: () => Promise<void>;
+  fetchHottestAlbums: () => Promise<void>;
   fetchStats: () => Promise<void>;
   fetchSongs: () => Promise<void>;
   deleteSong: (id: string) => Promise<void>;
@@ -34,6 +36,7 @@ export const useMusicStore = create<MusicStore>((set) => ({
   featuredSongs: [],
   madeForYouSongs: [],
   trendingSongs: [],
+  hottestAlbums: [],
   stats: {
     totalSongs: 0,
     totalAlbums: 0,
@@ -63,21 +66,32 @@ export const useMusicStore = create<MusicStore>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await axiosInstance.delete(`/admin/albums/${id}`);
-      set((state) => ({
-        // update the state
-        albums: state.albums.filter((album) => album._id !== id),
 
-        // update the songs
-        songs: state.songs.map((song) =>
-          song.albumId === state.albums.find((a) => a._id === id)?.title
-            ? { ...song, album: null }
-            : song
-        ),
-      }));
+      set((state) => {
+        const updatedAlbums = state.albums.filter((album) => album._id !== id);
+
+        const updatedSongs = state.songs.map((song) => {
+          if (song.albums && song.albums.includes(id)) {
+            const newAlbumsForSong = song.albums.filter(
+              (albumId) => albumId !== id
+            );
+            return { ...song, albums: newAlbumsForSong };
+          }
+          return song;
+        });
+
+        return {
+          albums: updatedAlbums,
+          songs: updatedSongs,
+        };
+      });
 
       toast.success("Album deleted successfully");
     } catch (error: any) {
-      toast.error("Failed to delete album: " + error.message);
+      toast.error(
+        "Failed to delete album: " +
+          (error.response?.data?.message || error.message)
+      );
     } finally {
       set({ isLoading: false });
     }
@@ -167,6 +181,22 @@ export const useMusicStore = create<MusicStore>((set) => ({
       set({ error: error.response.data.message });
     } finally {
       set({ isLoading: false });
+    }
+  },
+
+  fetchHottestAlbums: async () => {
+    // Không cần set isLoading ở đây nếu HomePage đã xử lý
+    // set({ isLoading: true, error: null });
+    try {
+      // Gọi API backend mới của bạn
+      const res = await axiosInstance.get("/albums/hottest");
+      set({ hottestAlbums: res.data });
+    } catch (error: any) {
+      console.error("Failed to fetch hottest albums:", error);
+      // Có thể set lỗi nếu cần
+      // set({ error: error?.response?.data?.message || "Failed to fetch hottest albums" });
+    } finally {
+      // set({ isLoading: false });
     }
   },
 }));

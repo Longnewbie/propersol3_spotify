@@ -9,13 +9,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { axiosInstance } from "@/lib/axios";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { Plus, Upload } from "lucide-react";
@@ -26,13 +19,12 @@ import toast from "react-hot-toast";
 interface NewSong {
   title: string;
   artist: string;
-  album: string;
   duration: string;
 }
 
 const AddSongDialog = () => {
   const { getToken } = useAuth();
-  const { albums, fetchSongs } = useMusicStore();
+  const { fetchSongs } = useMusicStore();
   const [songDialogOpen, setSongDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,7 +32,6 @@ const AddSongDialog = () => {
   const [newSong, setNewSong] = useState<NewSong>({
     title: "",
     artist: "",
-    album: "",
     duration: "0",
   });
 
@@ -72,9 +63,6 @@ const AddSongDialog = () => {
       formData.append("title", newSong.title);
       formData.append("artist", newSong.artist);
       formData.append("duration", newSong.duration);
-      if (newSong.album && newSong.album !== "none") {
-        formData.append("albumId", newSong.album);
-      }
 
       formData.append("audioFile", files.audio);
       formData.append("imageFile", files.image);
@@ -89,7 +77,6 @@ const AddSongDialog = () => {
       setNewSong({
         title: "",
         artist: "",
-        album: "",
         duration: "0",
       });
 
@@ -122,7 +109,7 @@ const AddSongDialog = () => {
         <DialogHeader>
           <DialogTitle>Thêm mới bài hát</DialogTitle>
           <DialogDescription>
-           Thêm bài hát mới vào thư viện nhạc của bạn
+            Thêm bài hát mới vào thư viện nhạc của bạn
           </DialogDescription>
         </DialogHeader>
 
@@ -168,9 +155,7 @@ const AddSongDialog = () => {
                   <div className="p-3 bg-zinc-800 rounded-full inline-block mb-2">
                     <Upload className="size-6 text-zinc-400" />
                   </div>
-                  <div className="text-sm text-zinc-400 mb-2">
-                    Tải ảnh bìa
-                  </div>
+                  <div className="text-sm text-zinc-400 mb-2">Tải ảnh bìa</div>
                   <Button variant={"outline"} size={"sm"} className="text-xs">
                     Chọn file
                   </Button>
@@ -222,7 +207,9 @@ const AddSongDialog = () => {
 
           {/* duration */}
           <div className="space-y-2">
-            <label className="text-sm font-medium">Thời lượng (Số giây - VD: 5 phút = 300 giây)</label>
+            <label className="text-sm font-medium">
+              Thời lượng (Số giây - VD: 5 phút = 300 giây)
+            </label>
             <Input
               type="number"
               min="0"
@@ -235,29 +222,6 @@ const AddSongDialog = () => {
               }
               className="bg-zinc-800 border-zinc-700"
             />
-          </div>
-
-          {/* album */}
-          <div className="space-y-2">
-            <label className="text-sm font-medium">Album (Chọn Album)</label>
-            <Select
-              value={newSong.album}
-              onValueChange={(value) =>
-                setNewSong({ ...newSong, album: value })
-              }
-            >
-              <SelectTrigger className="bg-zinc-800 border-zinc-700">
-                <SelectValue placeholder="Chọn Album" />
-              </SelectTrigger>
-              <SelectContent className="bg-zinc-800 border-zinc-700">
-                <SelectItem value="none">No Album (Single)</SelectItem>
-                {albums.map((album) => (
-                  <SelectItem key={album._id} value={album._id}>
-                    {album.title}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
         </div>
 

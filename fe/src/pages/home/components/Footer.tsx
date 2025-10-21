@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { FaLinkedin, FaGithub, FaFacebook } from "react-icons/fa6";
+import BankDialog from "./DialogBank/BankDialog";
 
 const FooterLink = ({
   href,
@@ -62,31 +63,35 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="flex gap-4 items-start">
-          <a
-            href="https://github.com/Longnewbie"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-white transition-colors"
-          >
-            <FaGithub size={24} />
-          </a>
-          <a
-            href="https://www.linkedin.com/in/gia-long-801b4b2b0"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-white transition-colors"
-          >
-            <FaLinkedin size={24} />
-          </a>
-          <a
-            href="https://www.facebook.com/gialong.ly.79"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-zinc-400 hover:text-white transition-colors"
-          >
-            <FaFacebook size={24} />
-          </a>
+        <div className="flex flex-col items-center lg:items-end gap-4">
+          <div className="flex gap-4 items-start">
+            <a
+              href="https://github.com/Longnewbie"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <FaGithub size={24} />
+            </a>
+            <a
+              href="https://www.linkedin.com/in/gia-long-801b4b2b0"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <FaLinkedin size={24} />
+            </a>
+            <a
+              href="https://www.facebook.com/gialong.ly.79"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-zinc-400 hover:text-white transition-colors"
+            >
+              <FaFacebook size={24} />
+            </a>
+          </div>
+
+          <BankDialog />
         </div>
       </div>
 

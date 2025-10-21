@@ -8,23 +8,10 @@ import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import AlbumPageSkeleton from "./AlbumPageSkeleton";
 import AudioWave from "@/hooks/AudioWave";
+import { Album } from "@/types";
 
 interface AlbumContentProps {
-  currentAlbum: {
-    _id?: string;
-    title: string;
-    artist: string;
-    imageUrl: string;
-    releaseYear: number;
-    songs: {
-      _id: string;
-      title: string;
-      artist: string;
-      imageUrl: string;
-      duration: number;
-      createdAt: string;
-    }[];
-  } | null;
+  currentAlbum: Album | null;
   currentSong: { _id: string } | null;
   isPlaying: boolean;
   handlePlayAlbum: () => void;

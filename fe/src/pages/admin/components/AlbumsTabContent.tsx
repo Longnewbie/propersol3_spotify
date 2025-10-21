@@ -14,7 +14,7 @@ const AlbumsTabContent = () => {
     <Card className="bg-zinc-800/50 border-zinc-700/50">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <div>
+          <div className="space-y-2">
             <CardTitle className="flex items-center gap-2">
               <Library className="size-5 text-violet-500" />
               Thư viện Albums

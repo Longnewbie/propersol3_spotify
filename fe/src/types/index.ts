@@ -2,7 +2,7 @@ export interface Song {
   _id: string;
   title: string;
   artist: string;
-  albumId: string | null;
+  albums: string[];
   imageUrl: string;
   audioUrl: string;
   duration: number;
