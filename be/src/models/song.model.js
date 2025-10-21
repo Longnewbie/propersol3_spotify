@@ -22,11 +22,12 @@ const songScheme = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    albumId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Album",
-      required: false,
-    },
+    albums: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Album",
+      },
+    ],
     lyrics: {
       type: String,
       required: false,

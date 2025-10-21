@@ -1,5 +1,5 @@
 import { Song } from "@/types";
-import SectionGridSkeleton from "./SectionGridSkeleton";
+import SectionGridSkeleton from "./skeleton/SectionGridSkeleton";
 import PlayButton from "./PlayButton";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";

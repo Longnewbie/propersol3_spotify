@@ -23,7 +23,7 @@ export const getFeaturedSongs = async (req, res, next) => {
           artist: 1,
           imageUrl: 1,
           audioUrl: 1,
-          albumId: 1,
+          albums: 1,
         },
       },
     ]);
@@ -47,7 +47,7 @@ export const getMadeForYouSongs = async (req, res, next) => {
           artist: 1,
           imageUrl: 1,
           audioUrl: 1,
-          albumId: 1,
+          albums: 1,
         },
       },
     ]);
@@ -71,7 +71,7 @@ export const getTrendingSongs = async (req, res, next) => {
           artist: 1,
           imageUrl: 1,
           audioUrl: 1,
-          albumId: 1,
+          albums: 1,
         },
       },
     ]);
@@ -94,7 +94,7 @@ export const searchSongs = async (req, res, next) => {
       $or: [{ title: regex }, { artist: regex }],
     })
       .limit(20)
-      .populate("albumId", "_id title imageUrl");
+      .populate("albums", "_id title imageUrl");
 
     // map albumId to a consistent album object if populated
     const mapped = songs.map((s) => ({
@@ -105,11 +105,11 @@ export const searchSongs = async (req, res, next) => {
       audioUrl: s.audioUrl,
       // include lyrics if present in DB
       lyrics: s.lyrics || "",
-      album: s.albumId
+      album: s.albums && s.albums.length > 0
         ? {
-            _id: s.albumId._id,
-            title: s.albumId.title,
-            imageUrl: s.albumId.imageUrl,
+            _id: s.albums[0]._id,
+            title: s.albums[0].title,
+            imageUrl: s.albums[0].imageUrl,
           }
         : null,
     }));

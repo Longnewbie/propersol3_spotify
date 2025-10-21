@@ -13,7 +13,10 @@ const AudioPlayer = () => {
       ? {
           title: currentSong.title,
           artist: currentSong.artist,
-          albumId: currentSong.albumId || "",
+          albumId:
+            currentSong.albums && currentSong.albums.length > 0
+              ? currentSong.albums[0]
+              : "",
           imageUrl: currentSong.imageUrl,
         }
       : null

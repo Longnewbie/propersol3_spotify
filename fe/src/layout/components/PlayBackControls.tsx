@@ -293,8 +293,13 @@ const PlayBackControls = () => {
               size={"icon"}
               variant={"ghost"}
               className="hover:text-white text-zinc-400"
-              onClick={() => navigate(`/albums/${currentSong?.albumId}`)}
-              title="Danh sách phát"
+              onClick={() => {
+                if (currentSong?.albums && currentSong.albums.length > 0) {
+                  navigate(`/albums/${currentSong.albums[0]}`);
+                }
+              }}
+              title="Dah sách phát"
+              disabled={!currentSong?.albums || currentSong.albums.length === 0}
             >
               <ListMusic className="size-4" />
             </Button>
@@ -304,11 +309,11 @@ const PlayBackControls = () => {
               variant={"ghost"}
               className={`transition-colors ${
                 isLiked
-                  ? "text-red-500 fill-red-500" // Trạng thái đã like
-                  : "text-zinc-400 hover:text-white" // Trạng thái chưa like
+                  ? "text-red-500 fill-red-500"
+                  : "text-zinc-400 hover:text-white"
               }`}
-              onClick={handleLike} // Thêm onClick
-              disabled={!currentSong} // Vô hiệu hóa khi không có bài hát
+              onClick={handleLike}
+              disabled={!currentSong}
               title={isLiked ? "Xóa khỏi Yêu thích" : "Thêm vào Yêu thích"}
             >
               <Heart className={`size-4 ${isLiked ? "fill-red-500" : ""}`} />
