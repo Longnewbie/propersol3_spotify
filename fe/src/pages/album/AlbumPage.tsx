@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import AlbumPageSkeleton from "./AlbumPageSkeleton";
 import AudioWave from "@/hooks/AudioWave";
 import { Album } from "@/types";
+import { formatDuration } from "@/lib/utils";
 
 interface AlbumContentProps {
   currentAlbum: Album | null;
@@ -17,12 +18,6 @@ interface AlbumContentProps {
   handlePlayAlbum: () => void;
   handlePlaySong: (index: number) => void;
 }
-
-export const formatDuration = (duration: number) => {
-  const minute = Math.floor(duration / 60);
-  const second = duration % 60;
-  return `${minute}:${second.toString().padStart(2, "0")}`;
-};
 
 const AlbumPage = () => {
   const { albumId } = useParams();
@@ -191,7 +186,9 @@ const AlbumContent = ({
 
                     {/* Mobile: hide release date, only duration */}
                     <div className="hidden md:flex items-center">
-                      {new Intl.DateTimeFormat("en-GB").format(new Date(song.createdAt))}
+                      {new Intl.DateTimeFormat("en-GB").format(
+                        new Date(song.createdAt)
+                      )}
                     </div>
                     <div className="flex items-center justify-end">
                       {formatDuration(song.duration)}
