@@ -116,31 +116,38 @@ const AlbumGrid = ({ albums, title, isLoading }: AlbumGridProps) => {
           isAnimating ? "opacity-0" : "opacity-100"
         )}
       >
-        {visibleAlbums.map((album) => (
-          <Link
-            key={album._id}
-            to={`/albums/${album._id}`}
-            className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40
+        {visibleAlbums.map((album, index) => {
+          const absoluteIndex = start + index;
+
+          return (
+            <Link
+              key={album._id}
+              to={`/albums/${album._id}`}
+              className="bg-zinc-800/40 p-4 rounded-md hover:bg-zinc-700/40
                        transition-all group/item cursor-pointer block"
-          >
-            <div className="relative mb-4">
-              <div className="aspect-square rounded-md shadow-lg overflow-hidden">
-                <img
-                  src={album.imageUrl || "/placeholder.svg"}
-                  alt={album.title}
-                  className="w-full h-full object-cover transition-transform duration-300
+            >
+              <div className="relative mb-4">
+                <div className="aspect-square rounded-md shadow-lg overflow-hidden relative">
+                  <img
+                    src={album.imageUrl || "/placeholder.svg"}
+                    alt={album.title}
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu
                              group-hover/item:scale-105"
-                />
+                  />
+                  <div className="absolute bottom-2 right-2 text-2xl font-bold text-white/60 z-10">
+                    #{absoluteIndex + 1}
+                  </div>
+                </div>
               </div>
-            </div>
-            <h3 className="font-medium mb-1 truncate text-white">
-              {album.title}
-            </h3>
-            <p className="text-sm text-zinc-400 truncate">
-              Album • {album.artist}
-            </p>
-          </Link>
-        ))}
+              <h3 className="font-medium mb-1 truncate text-white">
+                {album.title}
+              </h3>
+              <p className="text-sm text-zinc-400 truncate">
+                Album • {album.artist}
+              </p>
+            </Link>
+          );
+        })}
       </div>
     </div>
   );

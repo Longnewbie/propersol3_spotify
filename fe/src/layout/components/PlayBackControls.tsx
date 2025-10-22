@@ -223,7 +223,7 @@ const PlayBackControls = () => {
                 {isPlaying ? (
                   <FaPause className="size-5" />
                 ) : (
-                  <FaPlay className="size-5" />
+                  <FaPlay className="size-5 pl-0.5" />
                 )}
               </Button>
 
@@ -298,7 +298,7 @@ const PlayBackControls = () => {
                   navigate(`/albums/${currentSong.albums[0]}`);
                 }
               }}
-              title="Dah sách phát"
+              title="Danh sách phát"
               disabled={!currentSong?.albums || currentSong.albums.length === 0}
             >
               <ListMusic className="size-4" />

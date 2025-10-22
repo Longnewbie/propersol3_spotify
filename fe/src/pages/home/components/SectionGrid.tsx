@@ -65,11 +65,11 @@ const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
             transition-all group cursor-pointer"
           >
             <div className="relative mb-4">
-              <div className="aspect-square rounded-md shadow-lg overflow-hidden">
+              <div className="aspect-square rounded-md shadow-lg overflow-hidden relative">
                 <img
                   src={song.imageUrl}
                   alt={song.title}
-                  className="w-full h-full object-cover transition-transform duration-300
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu
                   group-hover:scale-105"
                 />
               </div>

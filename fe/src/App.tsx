@@ -11,6 +11,13 @@ import { Toaster } from "react-hot-toast";
 import NotFoundPage from "./pages/404/NotFoundPage";
 import LyricsPage from "./layout/components/LyricsPage";
 import FavoritesList from "./pages/favorite/FavoritesList";
+import AboutPage from "./pages/others/AboutPage";
+import CookiesPage from "./pages/others/CookiesPage";
+import AdsPage from "./pages/others/AdsPage";
+import LegalPage from "./pages/others/LegalPage";
+import PrivacyPolicyPage from "./pages/others/PrivacyPolicyPage";
+import SafetyPrivacyCenterPage from "./pages/others/SafetyPrivacyCenterPage";
+import AccessibilityPage from "./pages/others/AccessibilityPage";
 
 function App() {
   return (
@@ -33,8 +40,17 @@ function App() {
           <Route path="/albums/:albumId" element={<AlbumPage />} />
           <Route path="/favorites" element={<FavoritesList />} />
           <Route path="/:id/lyrics" element={<LyricsPage />} />
+
           <Route path="/*" element={<NotFoundPage />} />
         </Route>
+
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/accessibility" element={<AccessibilityPage />} />
+        <Route path="/cookies" element={<CookiesPage />} />
+        <Route path="/ads" element={<AdsPage />} />
+        <Route path="/legal" element={<LegalPage />} />
+        <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
+        <Route path="/privacy-center" element={<SafetyPrivacyCenterPage />} />
       </Routes>
       <Toaster />
     </>

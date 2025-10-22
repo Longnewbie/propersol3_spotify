@@ -72,7 +72,7 @@ const LeftSidebar = () => {
         <div className="flex items-center justify-between mb-3 sm:mb-4">
           <div className="flex items-center text-white px-1 sm:px-2 justify-center sm:justify-start">
             <Library className="size-5 sm:size-6 mr-1 sm:mr-2" />
-            <span className="hidden sm:inline">Playlists</span>
+            <span className="hidden sm:inline">Danh sách phát</span>
           </div>
         </div>
 
