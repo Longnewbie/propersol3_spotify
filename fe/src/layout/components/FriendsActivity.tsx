@@ -20,7 +20,7 @@ const FriendsActivity = () => {
       <div className="p-4 flex justify-between items-center border-b border-zinc-800">
         <div className="flex items-center gap-2">
           <User className="size-5 shrink-0" />
-          <h2 className="font-semibold">Mọi người đang nghe gì</h2>
+          <h2 className="font-semibold">Mọi người đang nghe gì ?</h2>
         </div>
       </div>
 

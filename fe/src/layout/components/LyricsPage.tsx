@@ -130,10 +130,14 @@ const LyricsPage = () => {
     }
   }, [currentLyricIndex]);
 
-  const handleLyricClick = (time: number) => {
-    setCurrentTime(time);
+  const handleLyricClick = (line: { time: number; text: string }) => {
+    if (line.text === "Lời bài hát chưa có sẵn" && line.time === 0) {
+      return;
+    }
+
+    setCurrentTime(line.time);
     if (audioRef.current) {
-      audioRef.current.currentTime = time;
+      audioRef.current.currentTime = line.time;
     }
   };
 
@@ -215,7 +219,7 @@ const LyricsPage = () => {
                   ? "text-lg sm:text-xl md:text-2xl text-white font-semibold drop-shadow-[0_0_6px_rgba(255,255,255,0.5)]"
                   : "text-base sm:text-lg md:text-xl text-slate-400"
               )}
-              onClick={() => handleLyricClick(line.time)}
+              onClick={() => handleLyricClick(line)}
             >
               {line.text}
             </div>

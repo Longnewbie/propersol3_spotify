@@ -51,25 +51,25 @@ const HomePage = () => {
       <Topbar />
       <ScrollArea className="flex-1 overflow-y-auto">
         <div className="p-4 sm:p-6">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-6">
-            Chào buổi chiều
+          <h1 className="text-xl sm:text-2xl font-bold mb-6">
+            Gợi Ý Bài Hát
           </h1>
           <FeaturedSection />
 
           <div className="space-y-8">
             <AlbumGrid
-              title="Album hot nhất"
+              title="Album Nổi Bật"
               albums={hottestAlbums}
               isLoading={isLoading}
             />
 
             <SectionGrid
-              title="Dành riêng cho bạn"
+              title="Dành Riêng Cho Bạn"
               songs={madeForYouSongs}
               isLoading={isLoading}
             />
             <SectionGrid
-              title="Đang thịnh hành"
+              title="Đang Thịnh Hành"
               songs={trendingSongs}
               isLoading={isLoading}
             />

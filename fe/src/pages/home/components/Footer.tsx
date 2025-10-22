@@ -5,17 +5,33 @@ import BankDialog from "./DialogBank/BankDialog";
 const FooterLink = ({
   href,
   children,
+  newTab = true,
 }: {
   href: string;
   children: React.ReactNode;
-}) => (
-  <Link
-    to={href}
-    className="text-zinc-400 hover:text-white hover:underline text-sm"
-  >
-    {children}
-  </Link>
-);
+  newTab?: boolean;
+}) => {
+  const baseClass = "text-zinc-400 hover:text-white hover:underline text-sm";
+
+  if (newTab) {
+    return (
+      <a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={baseClass}
+      >
+        {children}
+      </a>
+    );
+  }
+
+  return (
+    <Link to={href} className={baseClass}>
+      {children}
+    </Link>
+  );
+};
 
 const Footer = () => {
   return (
