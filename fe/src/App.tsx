@@ -40,8 +40,6 @@ function App() {
           <Route path="/albums/:albumId" element={<AlbumPage />} />
           <Route path="/favorites" element={<FavoritesList />} />
           <Route path="/:id/lyrics" element={<LyricsPage />} />
-
-          <Route path="/*" element={<NotFoundPage />} />
         </Route>
 
         <Route path="/about" element={<AboutPage />} />
@@ -51,6 +49,8 @@ function App() {
         <Route path="/legal" element={<LegalPage />} />
         <Route path="/privacy-policy" element={<PrivacyPolicyPage />} />
         <Route path="/privacy-center" element={<SafetyPrivacyCenterPage />} />
+
+        <Route path="/*" element={<NotFoundPage />} />
       </Routes>
       <Toaster />
     </>
