@@ -16,7 +16,7 @@ import {
   VolumeX,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
@@ -47,6 +47,7 @@ const PlayBackControls = () => {
     cycleRepeatMode,
     currentTime,
     setCurrentTime,
+    showAlbumContext,
   } = usePlayerStore();
 
   const { userId } = useAuth();
@@ -155,6 +156,15 @@ const PlayBackControls = () => {
     }
   };
 
+  const getAlbumLink = () => {
+    if (currentSong?.albums && currentSong.albums.length > 0) {
+      return `/albums/${currentSong.albums[0]}`;
+    }
+    return null; // Return null if no album
+  };
+
+  const albumLink = getAlbumLink();
+
   if (!currentSong) {
     return (
       <footer className="h-20 sm:h-24 bg-zinc-900 border-t border-zinc-800 px-4">
@@ -178,9 +188,23 @@ const PlayBackControls = () => {
               className="w-14 h-14 object-cover rounded-md"
             />
             <div className="flex-1 min-w-0">
-              <div className="font-medium truncate hover:underline cursor-pointer">
-                {currentSong.title}
-              </div>
+              {albumLink ? (
+                <Link
+                  to={albumLink}
+                  className="font-medium truncate hover:underline cursor-pointer block text-white"
+                  title={currentSong.title}
+                >
+                  {currentSong.title}
+                </Link>
+              ) : (
+                <div
+                  className="font-medium truncate text-white"
+                  title={currentSong.title}
+                >
+                  {currentSong.title}
+                </div>
+              )}
+
               <div className="text-sm text-zinc-400 truncate hover:underline cursor-pointer">
                 {currentSong.artist}
               </div>
@@ -295,7 +319,7 @@ const PlayBackControls = () => {
               className="hover:text-white text-zinc-400"
               onClick={() => {
                 if (currentSong?.albums && currentSong.albums.length > 0) {
-                  navigate(`/albums/${currentSong.albums[0]}`);
+                  showAlbumContext(currentSong.albums[0]);
                 }
               }}
               title="Danh sách phát"

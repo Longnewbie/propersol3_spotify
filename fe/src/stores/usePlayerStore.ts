@@ -1,6 +1,8 @@
 import { create } from "zustand";
-import { Song } from "@/types";
+import { Album, Song } from "@/types";
 import { useChatStore } from "./useChatStore";
+import { axiosInstance } from "@/lib/axios";
+import toast from "react-hot-toast";
 
 type RepeatMode = "off" | "all" | "one";
 
@@ -12,6 +14,9 @@ interface PlayerStore {
   shuffle: boolean;
   repeatMode: RepeatMode;
   currentTime: number; // Add this line
+  isAlbumContextSidebarOpen: boolean; // Trạng thái mở/đóng sidebar album
+  contextAlbum: Album | null; // Album đang hiển thị trong sidebar
+  isContextLoading: boolean;
 
   initializeQueue: (songs: Song[]) => void;
   playAlbum: (songs: Song[], startIndex?: number) => void;
@@ -23,6 +28,9 @@ interface PlayerStore {
   toggleShuffle: () => void;
   cycleRepeatMode: () => void; // off -> all -> one -> off
   setCurrentTime: (time: number) => void; // Add this action
+
+  showAlbumContext: (albumId: string) => Promise<void>; // Fetch và mở sidebar
+  hideAlbumContext: () => void;
 }
 
 export const usePlayerStore = create<PlayerStore>((set, get) => ({
@@ -33,6 +41,9 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   shuffle: false,
   repeatMode: "off",
   currentTime: 0, // Add initial state
+  isAlbumContextSidebarOpen: false,
+  contextAlbum: null,
+  isContextLoading: false,
 
   initializeQueue: (songs: Song[]) => {
     set({
@@ -228,22 +239,55 @@ export const usePlayerStore = create<PlayerStore>((set, get) => ({
   },
 
   cycleRepeatMode: () =>
-  set((state) => {
-    // 1. Nếu đang là "Lặp lại tất cả" -> chuyển sang "Lặp lại một bài"
-    if (state.repeatMode === "all") {
-      return { repeatMode: "one" };
-    }
-    
-    // 2. Nếu đang là "Lặp lại một bài" -> chuyển sang "Tắt"
-    if (state.repeatMode === "one") {
-      return { repeatMode: "off" };
-    }
-    
-    // 3. Nếu đang là "Tắt" (hoặc bất cứ gì khác) -> chuyển về "Lặp lại tất cả"
-    return { repeatMode: "all" };
-  }),
+    set((state) => {
+      // 1. Nếu đang là "Lặp lại tất cả" -> chuyển sang "Lặp lại một bài"
+      if (state.repeatMode === "all") {
+        return { repeatMode: "one" };
+      }
+
+      // 2. Nếu đang là "Lặp lại một bài" -> chuyển sang "Tắt"
+      if (state.repeatMode === "one") {
+        return { repeatMode: "off" };
+      }
+
+      // 3. Nếu đang là "Tắt" (hoặc bất cứ gì khác) -> chuyển về "Lặp lại tất cả"
+      return { repeatMode: "all" };
+    }),
 
   setCurrentTime: (time: number) => {
     set({ currentTime: time });
+  },
+
+  showAlbumContext: async (albumId: string) => {
+    // Nếu sidebar đã mở và đúng album thì không làm gì
+    if (
+      get().isAlbumContextSidebarOpen &&
+      get().contextAlbum?._id === albumId
+    ) {
+      return;
+    }
+
+    // Nếu sidebar đang mở nhưng album khác, đóng lại trước
+    if (get().isAlbumContextSidebarOpen) {
+      set({ isAlbumContextSidebarOpen: false, contextAlbum: null });
+
+      await new Promise((resolve) => setTimeout(resolve, 300));
+    }
+
+    set({ isContextLoading: true, isAlbumContextSidebarOpen: true }); // Mở sidebar và hiện loading
+    try {
+      const res = await axiosInstance.get(`/albums/${albumId}`);
+      set({ contextAlbum: res.data });
+    } catch (error: any) {
+      toast.error("Không thể tải thông tin album.");
+      console.error("Failed to fetch album context:", error);
+      set({ isAlbumContextSidebarOpen: false, contextAlbum: null });
+    } finally {
+      set({ isContextLoading: false });
+    }
+  },
+
+  hideAlbumContext: () => {
+    set({ isAlbumContextSidebarOpen: false, contextAlbum: null });
   },
 }));

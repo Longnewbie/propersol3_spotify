@@ -9,9 +9,12 @@ import FriendsActivity from "./components/FriendsActivity";
 import AudioPlayer from "./components/AudioPlayer";
 import PlayBackControls from "./components/PlayBackControls";
 import { useEffect, useState } from "react";
+import { usePlayerStore } from "@/stores/usePlayerStore";
+import AlbumContextSidebar from "./components/AlbumContextSidebar";
 
 const MainLayout = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const { isAlbumContextSidebarOpen, hideAlbumContext } = usePlayerStore();
 
   useEffect(() => {
     const checkMobile = () => {
@@ -64,6 +67,16 @@ const MainLayout = () => {
       </ResizablePanelGroup>
 
       <PlayBackControls />
+
+      <AlbumContextSidebar />
+
+      {isAlbumContextSidebarOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 z-40"
+          onClick={hideAlbumContext}
+          aria-hidden="true"
+        />
+      )}
     </div>
   );
 };

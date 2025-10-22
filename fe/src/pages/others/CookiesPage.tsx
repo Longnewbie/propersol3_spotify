@@ -42,7 +42,7 @@ const CookiesPage = () => {
             <li>
               <span className="font-medium text-white">
                 Cookie cá nhân hóa:
-              </span>
+              </span>{" "}
               Lưu trữ tùy chọn người dùng (ngôn ngữ, chủ đề, playlist yêu
               thích...) để cá nhân hóa trải nghiệm.
             </li>
