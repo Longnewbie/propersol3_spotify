@@ -24,19 +24,21 @@ export const createSong = async (req, res, next) => {
     const audioFile = req.files.audioFile;
     const imageFile = req.files.imageFile;
 
-    const audioUrl = await uploadToCloudinary(audioFile);
-    const imageUrl = await uploadToCloudinary(imageFile);
+    const [audioResult, imageResult] = await Promise.all([
+      uploadToCloudinary(audioFile),
+      uploadToCloudinary(imageFile),
+    ]);
 
     const song = new Song({
       title,
       artist,
-      audioUrl,
-      imageUrl,
+      audioUrl: audioResult,
+      imageUrl: imageResult,
       duration,
     });
 
     await song.save();
-    res.status(201).json(song);
+    return res.status(201).json(song);
   } catch (error) {
     console.log("Error in createSong ", error);
     next(error);
@@ -135,7 +137,7 @@ export const createAlbum = async (req, res, next) => {
 
     await album.save();
 
-    res.status(201).json(album);
+    return res.status(201).json(album);
   } catch (error) {
     console.log("Error in createAlbum ", error);
     next(error);
