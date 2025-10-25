@@ -15,9 +15,11 @@ import toast from "react-hot-toast";
 import { useMusicStore } from "@/stores/useMusicStore";
 import { useAuth } from "@clerk/clerk-react";
 
+const ITEMS_PER_PAGE = 10;
+
 const AddAlbumDialog = () => {
   const { getToken } = useAuth();
-  const { fetchAlbums } = useMusicStore();
+  const { fetchAlbumsForAdmin } = useMusicStore();
   const [albumDialogOpen, setAlbumDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -71,7 +73,7 @@ const AddAlbumDialog = () => {
 
       toast.success("Album added successfully!");
 
-      fetchAlbums();
+      fetchAlbumsForAdmin(1, ITEMS_PER_PAGE, "");
     } catch (error: any) {
       toast.error("Failed to add album: " + error.message);
     } finally {

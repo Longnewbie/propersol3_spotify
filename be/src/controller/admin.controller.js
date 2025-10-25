@@ -68,6 +68,57 @@ export const deleteSong = async (req, res, next) => {
   }
 };
 
+export const getAllAlbumsForAdmin = async (req, res, next) => {
+  try {
+    // 1. Get page, limit, and query from query parameters
+    const page = parseInt(req.query.page) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const query = req.query.q || "";
+
+    // 2. Calculate skip value
+    const skip = (page - 1) * limit;
+
+    // 3. Build filter for search (title or artist)
+    let filter = {};
+    if (query) {
+      const regex = new RegExp(
+        query.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+        "i"
+      );
+      filter = { $or: [{ title: regex }, { artist: regex }] };
+    }
+
+    // 4. Fetch paginated albums and total count concurrently
+    const albumsPromise = Album.find(filter)
+      .sort({ createdAt: -1 }) // Sort by creation date (newest first)
+      .skip(skip)
+      .limit(limit);
+    // We usually don't need song details for the album list view
+    // .populate('songs'); // Remove or comment out populate if not needed here
+
+    const countPromise = Album.countDocuments(filter);
+
+    const [albums, totalAlbums] = await Promise.all([
+      albumsPromise,
+      countPromise,
+    ]);
+
+    // 5. Calculate total pages
+    const totalPages = Math.ceil(totalAlbums / limit);
+
+    // 6. Send paginated response
+    res.status(200).json({
+      albums,
+      currentPage: page,
+      totalPages,
+      totalAlbums,
+    });
+  } catch (error) {
+    console.error("Error in getAllAlbums:", error);
+    next(error);
+  }
+};
+
 export const createAlbum = async (req, res, next) => {
   try {
     const { title, artist, releaseYear } = req.body;
