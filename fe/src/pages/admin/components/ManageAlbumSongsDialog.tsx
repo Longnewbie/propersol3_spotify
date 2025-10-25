@@ -10,11 +10,12 @@ import { Album } from "@/types";
 import { Button } from "@/components/ui/button";
 import { axiosInstance } from "@/lib/axios";
 import toast from "react-hot-toast";
-import { CirclePlus, RefreshCcw, Trash2 } from "lucide-react";
+import { CirclePlus, RefreshCcw, Trash2, Loader } from "lucide-react";
 import { useAuth } from "@clerk/clerk-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
 
 interface Props {
   album: Album | null;
@@ -32,112 +33,147 @@ const ManageAlbumSongsDialog = ({
     initialAlbum
   );
 
-  const { songs: allSongs, fetchSongs, fetchAlbums } = useMusicStore();
+  const {
+    fetchAllSongList,
+    allSongList,
+    isAllSongsLoading,
+    fetchAlbumsForAdmin,
+  } = useMusicStore();
+
   const { getToken } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [query, setQuery] = useState("");
   const [isRefreshing, setIsRefreshing] = useState(false);
 
-  // Cập nhật state cục bộ khi initialAlbum thay đổi
+  useEffect(() => {
+    if (open) {
+      fetchAllSongList();
+    }
+  }, [open, fetchAllSongList]);
+
   useEffect(() => {
     setCurrentAlbumData(initialAlbum);
   }, [initialAlbum]);
 
   const { songsInAlbum, availableSongs } = useMemo(() => {
-    if (!currentAlbumData) {
+    if (!currentAlbumData || !allSongList || allSongList.length === 0) {
       return { songsInAlbum: [], availableSongs: [] };
     }
 
     const songIdsInAlbum = currentAlbumData.songs.map((id) => String(id));
 
-    const inAlbum = allSongs
-      .filter((song) => songIdsInAlbum.includes(song._id)) // So sánh string[] với string
+    const inAlbum = allSongList
+      .filter((song) => songIdsInAlbum.includes(song._id))
       .sort((a, b) => a.title.localeCompare(b.title));
 
-    const available = allSongs
+    const available = allSongList
       .filter(
         (song) =>
-          !songIdsInAlbum.includes(song._id) && // So sánh string[] với string
+          !songIdsInAlbum.includes(song._id) &&
           song.title.toLowerCase().includes(query.toLowerCase())
       )
       .sort((a, b) => a.title.localeCompare(b.title));
 
     return { songsInAlbum: inAlbum, availableSongs: available };
-  }, [currentAlbumData, allSongs, query]); // Tính lại khi album cục bộ, allSongs, hoặc query thay đổi
+  }, [currentAlbumData, allSongList, query]);
 
-  // Hàm tìm và cập nhật state album cục bộ từ store (sau khi fetch)
-  const updateLocalAlbumStateFromStore = () => {
-    if (!initialAlbum) return; // Cần ID gốc để tìm
-    // Lấy state mới nhất từ store sau khi fetch
+  const updateLocalAlbumStateFromStore = useCallback(() => {
+    if (!initialAlbum?._id) return;
     const updatedAlbumFromStore = useMusicStore
       .getState()
       .albums.find((a) => a._id === initialAlbum._id);
-    if (updatedAlbumFromStore) {
-      setCurrentAlbumData(updatedAlbumFromStore); // Cập nhật state cục bộ
-    } else {
-      console.warn("Album not found in store after fetch.");
-    }
-  };
 
-  const handleRefresh = async () => {
+    if (updatedAlbumFromStore) {
+      setCurrentAlbumData(updatedAlbumFromStore);
+    } else {
+      console.warn(
+        "Album not found in store after fetch. It might be on a different page or deleted."
+      );
+    }
+  }, [initialAlbum]);
+
+  // Handler for the refresh button
+  const handleRefresh = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      await fetchSongs();
-      await fetchAlbums();
+      await fetchAllSongList();
+      const currentPage = useMusicStore.getState().albumPagination.currentPage;
+      const currentLimit = 10;
+      const currentQuery = "";
+      await fetchAlbumsForAdmin(currentPage, currentLimit, currentQuery);
 
       updateLocalAlbumStateFromStore();
+      toast.success("Danh sách đã được làm mới!");
     } catch (error: any) {
       console.error("Refresh failed:", error);
       toast.error(error.response?.data?.message || "Làm mới thất bại");
     } finally {
       setIsRefreshing(false);
     }
-  };
+  }, [fetchAllSongList, fetchAlbumsForAdmin, updateLocalAlbumStateFromStore]);
 
-  const fetchAPI = async (
-    url: string,
-    songId: string,
-    successMessage: string
-  ) => {
-    if (!currentAlbumData) return;
-    setIsLoading(true);
-    try {
-      const token = await getToken();
-      await axiosInstance.post(
-        url,
-        { albumId: currentAlbumData._id, songId },
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-      toast.success(successMessage);
+  const callApi = useCallback(
+    async (url: string, songId: string, successMessage: string) => {
+      if (!currentAlbumData?._id) return;
+      setIsLoading(true);
+      try {
+        const token = await getToken();
+        await axiosInstance.post(
+          url,
+          { albumId: currentAlbumData._id, songId },
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
+        toast.success(successMessage);
 
-      await fetchAlbums();
-      await fetchSongs();
+        // Refetch data to update the store
+        await fetchAllSongList(); // Refetch all songs
+        const currentPage =
+          useMusicStore.getState().albumPagination.currentPage;
+        const currentLimit = 10;
+        const currentQuery = "";
+        await fetchAlbumsForAdmin(currentPage, currentLimit, currentQuery); // Refetch current page of albums
 
-      // Cập nhật state cục bộ từ store
-      updateLocalAlbumStateFromStore();
-    } catch (error: any) {
-      toast.error(error.response?.data?.message || "Đã xảy ra lỗi");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+        // Update the local dialog state from the refreshed store data
+        updateLocalAlbumStateFromStore();
+      } catch (error: any) {
+        toast.error(error.response?.data?.message || "Đã xảy ra lỗi");
+      } finally {
+        setIsLoading(false);
+      }
+    },
+    [
+      currentAlbumData,
+      getToken,
+      fetchAlbumsForAdmin,
+      fetchAllSongList,
+      updateLocalAlbumStateFromStore,
+    ]
+  );
 
-  const handleAddSong = (songId: string) => {
-    fetchAPI("/admin/albums/add-song", songId, "Đã thêm bài hát vào album");
-  };
+  // Specific handlers for adding and removing songs
+  const handleAddSong = useCallback(
+    (songId: string) => {
+      callApi("/admin/albums/add-song", songId, "Đã thêm bài hát vào album");
+    },
+    [callApi]
+  );
 
-  const handleRemoveSong = (songId: string) => {
-    fetchAPI("/admin/albums/remove-song", songId, "Đã gỡ bài hát khỏi album");
-  };
+  const handleRemoveSong = useCallback(
+    (songId: string) => {
+      callApi("/admin/albums/remove-song", songId, "Đã gỡ bài hát khỏi album");
+    },
+    [callApi]
+  );
 
-  // Check state cục bộ trước khi render
   if (!currentAlbumData) return null;
+
+  const showListLoader = isAllSongsLoading;
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="bg-zinc-900 border-zinc-700 max-w-5xl max-h-[80vh] flex flex-col">
+        {/* Dialog Header */}
         <DialogHeader>
-          {/* Dùng state cục bộ */}
           <DialogTitle>
             Quản lý bài hát cho Album: {currentAlbumData.title}
           </DialogTitle>
@@ -146,31 +182,41 @@ const ManageAlbumSongsDialog = ({
           </DialogDescription>
         </DialogHeader>
 
+        {/* Main Content Grid (Two Columns) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 flex-1 min-h-0">
+          {/* Column 1: Songs In Album */}
           <div className="flex flex-col gap-3 min-h-0">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold">
-                {/* Dùng kết quả từ useMemo */}
-                Bài hát trong Album ({songsInAlbum.length})
+                Bài hát trong Album (
+                {showListLoader ? "..." : songsInAlbum.length})
               </h3>
               <Button
                 variant="ghost"
                 size="icon"
                 className="text-emerald-500 hover:text-emerald-400 size-8"
                 onClick={handleRefresh}
-                disabled={isLoading || isRefreshing}
+                disabled={isLoading || isRefreshing || isAllSongsLoading}
                 title="Làm mới"
               >
                 <RefreshCcw
-                  className={`size-4 ${
-                    isRefreshing ? "animate-spin text-emerald-500" : ""
-                  }`}
+                  className={cn(
+                    "size-4",
+                    (isRefreshing || isAllSongsLoading) &&
+                      "animate-spin text-emerald-500"
+                  )}
                 />
               </Button>
             </div>
-            {/* Dùng kết quả từ useMemo */}
+            {/* Scrollable list for songs in album */}
             <ScrollArea className="flex-1 border border-zinc-700 rounded-md p-3">
-              {songsInAlbum.length > 0 ? (
+              {showListLoader ? (
+                // Show loader if the main song list is loading
+                <div className="flex items-center justify-center h-20">
+                  <Loader className="size-5 animate-spin text-zinc-400" />
+                </div>
+              ) : songsInAlbum.length > 0 ? (
+                // Render list items if available
                 songsInAlbum.map((song) => (
                   <div
                     key={song._id}
@@ -196,21 +242,30 @@ const ManageAlbumSongsDialog = ({
             </ScrollArea>
           </div>
 
+          {/* Column 2: Available Songs */}
           <div className="flex flex-col gap-3 min-h-0">
             <h3 className="font-semibold">Bài hát có thể thêm (Tất cả)</h3>
+            {/* Search Input */}
             <Input
               placeholder="Tìm bài hát..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               className="bg-zinc-800 border-zinc-700"
             />
-            {/* Dùng kết quả từ useMemo */}
+            {/* Scrollable list for available songs */}
             <ScrollArea className="flex-1 border border-zinc-700 rounded-md p-3">
-              {availableSongs.length > 0 ? (
+              {showListLoader ? (
+                // Show loader if the main song list is loading
+                <div className="flex items-center justify-center h-20">
+                  <Loader className="size-5 animate-spin text-zinc-400" />
+                </div>
+              ) : availableSongs.length > 0 ? (
+                // Render list items if available
                 availableSongs.map((song) => (
                   <div
                     key={song._id}
-                    className="flex items-center justify-between p-2 rounded hover:bg-zinc-800 mb-1"
+                    // Specific padding for better spacing near scrollbar
+                    className="flex items-center justify-between pl-2 py-2 pr-4 rounded hover:bg-zinc-800 mb-1"
                   >
                     <span className="truncate">{song.title}</span>
                     <Button
@@ -218,6 +273,7 @@ const ManageAlbumSongsDialog = ({
                       size="icon"
                       className="text-emerald-500 hover:text-emerald-400 size-8"
                       onClick={() => handleAddSong(song._id)}
+                      // Disable button during local add/remove or refresh
                       disabled={isLoading || isRefreshing}
                     >
                       <CirclePlus className="size-4" />
@@ -226,7 +282,9 @@ const ManageAlbumSongsDialog = ({
                 ))
               ) : (
                 <p className="text-sm text-zinc-500 text-center p-4">
-                  Không tìm thấy bài hát nào.
+                  {query
+                    ? "Không tìm thấy bài hát khớp."
+                    : "Không có bài hát nào để thêm."}
                 </p>
               )}
             </ScrollArea>

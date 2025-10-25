@@ -6,6 +6,7 @@ import {
   createSong,
   deleteAlbum,
   deleteSong,
+  getAllAlbumsForAdmin,
   removeSongFromAlbum,
   updateSong,
 } from "../controller/admin.controller.js";
@@ -16,6 +17,7 @@ const router = Router();
 router.use(protectRoute, requireAdmin);
 
 router.get("/check", checkAdmin);
+router.get("/albums", getAllAlbumsForAdmin);
 
 router.post("/songs", createSong);
 router.delete("/songs/:id", deleteSong);
