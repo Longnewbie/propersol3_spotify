@@ -134,7 +134,7 @@ const AlbumGrid = ({ albums, title, isLoading }: AlbumGridProps) => {
                     className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu
                              group-hover/item:scale-105"
                   />
-                  <div className="absolute bottom-2 right-2 text-2xl font-bold text-white/60 z-10">
+                  <div className="absolute bottom-2 right-2 text-2xl font-bold text-white/60">
                     #{absoluteIndex + 1}
                   </div>
                 </div>

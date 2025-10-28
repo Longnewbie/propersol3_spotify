@@ -38,7 +38,9 @@ export const getAllSongs = async (req, res, next) => {
     }
 
     // Tạo query cơ bản
-    let songsQuery = Song.find(filter).sort({ createdAt: -1 });
+    let songsQuery = Song.find(filter)
+      .select("_id title artist imageUrl duration lyrics createdAt")
+      .sort({ createdAt: -1 });
 
     // Áp dụng skip và limit NẾU cần phân trang
     if (shouldPaginate) {
@@ -76,7 +78,6 @@ export const getAllSongs = async (req, res, next) => {
 
 export const getFeaturedSongs = async (req, res, next) => {
   try {
-    // fetch 6 random songs using mongodb aggregation pipeline
     const songs = await Song.aggregate([
       {
         $sample: { size: 9 },
