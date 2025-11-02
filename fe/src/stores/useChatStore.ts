@@ -91,15 +91,27 @@ export const useChatStore = create<ChatStore>((set, get) => ({
       });
 
       socket.on("receive_message", (message: Message) => {
-        set((state) => ({
-          messages: [...state.messages, message],
-        }));
+        set((state) => {
+          if (
+            state.selectedUser &&
+            state.selectedUser.clerkId === message.senderId
+          ) {
+            return { messages: [...state.messages, message] };
+          }
+          return state;
+        });
       });
 
       socket.on("message_sent", (message: Message) => {
-        set((state) => ({
-          messages: [...state.messages, message],
-        }));
+        set((state) => {
+          if (
+            state.selectedUser &&
+            state.selectedUser.clerkId === message.receiverId
+          ) {
+            return { messages: [...state.messages, message] };
+          }
+          return state;
+        });
       });
 
       socket.on("activity_updated", ({ userId, activity }) => {

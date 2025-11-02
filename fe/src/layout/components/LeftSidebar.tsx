@@ -90,7 +90,7 @@ const LeftSidebar = () => {
                   <img
                     src={album.imageUrl}
                     alt="playlist img"
-                    className="size-11 sm:size-12 rounded-md flex-shrink-0 object-cover"
+                    className="size-11 sm:size-14 rounded-md flex-shrink-0 object-cover"
                   />
 
                   {/* Mobile, Tablet */}
