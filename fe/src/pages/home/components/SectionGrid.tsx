@@ -2,7 +2,7 @@ import { Song } from "@/types";
 import SectionGridSkeleton from "./skeleton/SectionGridSkeleton";
 import PlayButton from "./PlayButton";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 type SectionGridProps = {
   title: string;
@@ -24,7 +24,10 @@ const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
     setDisplayCount(INITIAL_DISPLAY_COUNT);
   };
 
-  const songsToDisplay = songs.slice(0, displayCount);
+  const songsToDisplay = useMemo(
+    () => songs.slice(0, displayCount),
+    [songs, displayCount]
+  );
 
   if (isLoading) return <SectionGridSkeleton />;
 
@@ -33,7 +36,7 @@ const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-xl sm:text-2xl font-bold">{title}</h2>
         <div className="flex items-center gap-2">
-          {/* show less) */}
+          {/* show less */}
           {displayCount > INITIAL_DISPLAY_COUNT && (
             <Button
               variant="link"
@@ -69,8 +72,9 @@ const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
                 <img
                   src={song.imageUrl}
                   alt={song.title}
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu
-                  group-hover:scale-105"
+                  loading="lazy"
+                  decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu group-hover:scale-105"
                 />
               </div>
 

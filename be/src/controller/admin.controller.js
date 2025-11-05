@@ -1,26 +1,13 @@
 import { Song } from "../models/song.model.js";
 import { Album } from "../models/album.model.js";
-import cloudinary from "../lib/cloudinary.js";
-
-// helper func for cloudinary uploads
-const uploadToCloudinary = async (file) => {
-  try {
-    const result = await cloudinary.uploader.upload(file.tempFilePath, {
-      resource_type: "auto",
-    });
-    return result.secure_url;
-  } catch (error) {
-    console.log("Error in uploadToCloudinary ", error);
-    throw new Error("Error uploading to cloudinary");
-  }
-};
+import { uploadToCloudinary, deleteFromCloudinary } from "../helper/helper.js";
 
 export const createSong = async (req, res, next) => {
   try {
     if (!req.files || !req.files.audioFile || !req.files.imageFile) {
       return res.status(400).json({ message: "Please upload all files!" });
     }
-    const { title, artist, duration } = req.body; // Bỏ albumId
+    const { title, artist, duration } = req.body;
     const audioFile = req.files.audioFile;
     const imageFile = req.files.imageFile;
 
@@ -53,6 +40,11 @@ export const deleteSong = async (req, res, next) => {
     if (!song) {
       return res.status(404).json({ message: "Song not found" });
     }
+
+    await Promise.all([
+      deleteFromCloudinary(song.audioUrl, "video"),
+      deleteFromCloudinary(song.imageUrl, "image"),
+    ]);
 
     // Cập nhật TẤT CẢ album chứa bài hát này
     if (song.albums && song.albums.length > 0) {
@@ -186,6 +178,10 @@ export const deleteAlbum = async (req, res, next) => {
 
     if (!album) {
       return res.status(404).json({ message: "Album not found" });
+    }
+
+    if (album.imageUrl) {
+      await deleteFromCloudinary(album.imageUrl, "image");
     }
 
     // Gỡ ID album này ra khỏi tất cả bài hát

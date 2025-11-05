@@ -1,23 +1,34 @@
 import { Route, Routes } from "react-router-dom";
-import HomePage from "./pages/home/HomePage";
-import AuthCallbackPage from "./pages/auth-callback/AuthCallbackPage";
+import React from "react";
 import { AuthenticateWithRedirectCallback } from "@clerk/clerk-react";
 import MainLayout from "./layout/MainLayout";
-import ChatPage from "./pages/chat/ChatPage";
-import AlbumPage from "./pages/album/AlbumPage";
-import AdminPage from "./pages/admin/AdminPage";
-
 import { Toaster } from "react-hot-toast";
-import NotFoundPage from "./pages/404/NotFoundPage";
-import LyricsPage from "./layout/components/LyricsPage";
-import FavoritesList from "./pages/favorite/FavoritesList";
-import AboutPage from "./pages/others/AboutPage";
-import CookiesPage from "./pages/others/CookiesPage";
-import AdsPage from "./pages/others/AdsPage";
-import LegalPage from "./pages/others/LegalPage";
-import PrivacyPolicyPage from "./pages/others/PrivacyPolicyPage";
-import SafetyPrivacyCenterPage from "./pages/others/SafetyPrivacyCenterPage";
-import AccessibilityPage from "./pages/others/AccessibilityPage";
+
+const HomePage = React.lazy(() => import("./pages/home/HomePage"));
+const AuthCallbackPage = React.lazy(
+  () => import("./pages/auth-callback/AuthCallbackPage")
+);
+const AdminPage = React.lazy(() => import("./pages/admin/AdminPage"));
+const ChatPage = React.lazy(() => import("./pages/chat/ChatPage"));
+const AlbumPage = React.lazy(() => import("./pages/album/AlbumPage"));
+const FavoritesList = React.lazy(
+  () => import("./pages/favorite/FavoritesList")
+);
+const LyricsPage = React.lazy(() => import("./layout/components/LyricsPage"));
+const AboutPage = React.lazy(() => import("./pages/others/AboutPage"));
+const CookiesPage = React.lazy(() => import("./pages/others/CookiesPage"));
+const AdsPage = React.lazy(() => import("./pages/others/AdsPage"));
+const LegalPage = React.lazy(() => import("./pages/others/LegalPage"));
+const PrivacyPolicyPage = React.lazy(
+  () => import("./pages/others/PrivacyPolicyPage")
+);
+const SafetyPrivacyCenterPage = React.lazy(
+  () => import("./pages/others/SafetyPrivacyCenterPage")
+);
+const AccessibilityPage = React.lazy(
+  () => import("./pages/others/AccessibilityPage")
+);
+const NotFoundPage = React.lazy(() => import("./pages/404/NotFoundPage"));
 
 function App() {
   return (
@@ -31,6 +42,7 @@ function App() {
             />
           }
         />
+
         <Route path="/auth-callback" element={<AuthCallbackPage />} />
         <Route path="/admin" element={<AdminPage />} />
 
