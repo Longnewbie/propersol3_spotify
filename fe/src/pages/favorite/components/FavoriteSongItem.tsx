@@ -4,6 +4,7 @@ import { Heart, Play, Headphones } from "lucide-react";
 import { Song } from "@/types";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { useAuthStore } from "@/stores/useAuthStore";
+import BlurImage from "@/components/BlurImage";
 
 const FavoriteSongItem = ({
   song,
@@ -55,10 +56,10 @@ const FavoriteSongItem = ({
       </div>
 
       <div className="relative flex-shrink-0 group/image">
-        <img
-          src={song.imageUrl}
-          alt={song.title}
-          className="w-14 h-14 rounded-lg object-cover"
+        <BlurImage
+          src={song?.imageUrl}
+          alt={song?.title}
+          className="w-14 h-14 rounded-lg object-cover transition-[filter,opacity] duration-300"
         />
         {isCurrent && (
           <div className="absolute inset-0 bg-gradient-to-tr from-amber-500/30 to-transparent rounded-lg" />

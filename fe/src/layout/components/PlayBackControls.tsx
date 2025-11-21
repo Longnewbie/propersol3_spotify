@@ -20,6 +20,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useAuthStore } from "@/stores/useAuthStore";
 import toast from "react-hot-toast";
+import BlurImage from "@/components/BlurImage";
 
 const formatTime = (time: number) => {
   const minutes = Math.floor(time / 60);
@@ -182,9 +183,9 @@ const PlayBackControls = () => {
         <div className="flex justify-between items-center h-full max-w-[1800px] mx-auto">
           {/* current playing song */}
           <div className="flex items-center gap-4 min-w-[180px] w-[30%]">
-            <img
-              src={currentSong.imageUrl}
-              alt={currentSong.title}
+            <BlurImage
+              src={currentSong?.imageUrl}
+              alt={currentSong?.title}
               className="w-14 h-14 object-cover rounded-md"
             />
             <div className="flex-1 min-w-0">
@@ -391,9 +392,9 @@ const PlayBackControls = () => {
         <div className="px-4 pb-4">
           {/* Song Info */}
           <div className="flex items-center gap-4 mb-4">
-            <img
-              src={currentSong.imageUrl}
-              alt={currentSong.title}
+            <BlurImage
+              src={currentSong?.imageUrl}
+              alt={currentSong?.title}
               className="w-14 h-14 sm:w-16 sm:h-16 object-cover rounded-lg shadow-lg"
             />
             <div className="flex-1 min-w-0">

@@ -6,6 +6,7 @@ import { ArrowLeft, Music } from "lucide-react";
 import { cn } from "@/lib/utils";
 import NotFoundPage from "@/pages/404/NotFoundPage";
 import { Song } from "@/types";
+import BlurImage from "@/components/BlurImage";
 
 // Reuse the same parseLRC function from original PlayBackControls
 const parseLRC = (raw: string) => {
@@ -173,10 +174,10 @@ const LyricsPage = () => {
             {/* Album Art */}
             <div className="w-12 h-12 rounded-lg overflow-hidden bg-slate-800 shrink-0">
               {currentSong.imageUrl ? (
-                <img
-                  src={currentSong.imageUrl || "/placeholder.svg"}
-                  alt={currentSong.title}
-                  className="w-full h-full object-cover"
+                <BlurImage
+                  src={currentSong?.imageUrl || "/placeholder.svg"}
+                  alt={currentSong?.title}
+                  className="w-full h-full object-cover transition-[filter] duration-300"
                 />
               ) : (
                 <div className="w-full h-full flex items-center justify-center">

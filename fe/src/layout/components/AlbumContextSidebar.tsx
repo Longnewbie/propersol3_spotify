@@ -8,6 +8,7 @@ import AudioWave from "@/hooks/AudioWave";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { usePlayerStore } from "@/stores/usePlayerStore";
 import { Link } from "react-router-dom";
+import BlurImage from "@/components/BlurImage";
 
 const AlbumContextSidebar = () => {
   const {
@@ -66,9 +67,9 @@ const AlbumContextSidebar = () => {
               className="flex-1 flex items-center gap-3 min-w-0"
             >
               <div className="flex items-center gap-3 p-4 mb-5 rounded-xl bg-gradient-to-br from-zinc-800/60 to-zinc-900/40 border border-zinc-700/40 hover:border-zinc-600/60 hover:bg-gradient-to-br hover:from-zinc-800/80 hover:to-zinc-900/60 transition-all duration-300 shadow-lg hover:shadow-xl group">
-                <img
-                  src={contextAlbum.imageUrl || "/placeholder.svg"}
-                  alt={contextAlbum.title}
+                <BlurImage
+                  src={contextAlbum?.imageUrl || "/placeholder.svg"}
+                  alt={contextAlbum?.title}
                   className="size-16 rounded-lg object-cover shadow-md flex-shrink-0 group-hover:shadow-lg transition-shadow duration-300"
                 />
                 <div className="min-w-0 flex-1">

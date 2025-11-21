@@ -3,6 +3,7 @@ import SectionGridSkeleton from "./skeleton/SectionGridSkeleton";
 import PlayButton from "./PlayButton";
 import { Button } from "@/components/ui/button";
 import { useState, useMemo } from "react";
+import BlurImage from "@/components/BlurImage";
 
 type SectionGridProps = {
   title: string;
@@ -69,12 +70,11 @@ const SectionGrid = ({ songs, title, isLoading }: SectionGridProps) => {
           >
             <div className="relative mb-4">
               <div className="aspect-square rounded-md shadow-lg overflow-hidden relative">
-                <img
-                  src={song.imageUrl}
+                <BlurImage
+                  src={song.imageUrl || "/placeholder.svg"}
                   alt={song.title}
-                  loading="lazy"
-                  decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu group-hover:scale-105"
+                  className="absolute inset-0 w-full h-full object-cover transform-gpu transition-[transform,filter,opacity] duration-300
+                            group-hover:scale-105"
                 />
               </div>
 

@@ -23,6 +23,7 @@ import { useEffect, useState, useCallback } from "react";
 import UpdateSongDialog from "./UpdateSongDialog";
 import { Song } from "@/types";
 import { useDebounce } from "@/hooks/useDebounce";
+import BlurImage from "@/components/BlurImage";
 
 const ITEMS_PER_PAGE = 10; // Define items per page constant
 
@@ -151,10 +152,10 @@ const SongsTable = () => {
                     className="hover:bg-zinc-800/50 border-zinc-800"
                   >
                     <TableCell className="p-2">
-                      <img
-                        src={song.imageUrl}
-                        alt={song.title}
-                        className="size-11 rounded object-cover"
+                      <BlurImage
+                        src={song?.imageUrl}
+                        alt={song?.title}
+                        className="size-11 rounded object-cover transition-[filter,opacity] duration-300"
                       />
                     </TableCell>
                     <TableCell className="font-medium max-w-[300px] truncate">

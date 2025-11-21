@@ -5,6 +5,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import SectionGridSkeleton from "./skeleton/SectionGridSkeleton";
+import BlurImage from "@/components/BlurImage";
 
 type AlbumGridProps = {
   title: string;
@@ -128,11 +129,11 @@ const AlbumGrid = ({ albums, title, isLoading }: AlbumGridProps) => {
             >
               <div className="relative mb-4">
                 <div className="aspect-square rounded-md shadow-lg overflow-hidden relative">
-                  <img
+                  <BlurImage
                     src={album.imageUrl || "/placeholder.svg"}
                     alt={album.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-300 transform-gpu
-                             group-hover/item:scale-105"
+                    className="absolute inset-0 w-full h-full object-cover transform-gpu transition-[transform,filter,opacity]
+                              duration-300 group-hover/item:scale-105"
                   />
                   <div className="absolute bottom-2 right-2 text-2xl font-bold text-white/60">
                     #{absoluteIndex + 1}

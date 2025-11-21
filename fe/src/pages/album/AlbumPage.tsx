@@ -10,6 +10,7 @@ import AlbumPageSkeleton from "./AlbumPageSkeleton";
 import AudioWave from "@/hooks/AudioWave";
 import { Album } from "@/types";
 import { formatDuration } from "@/lib/utils";
+import BlurImage from "@/components/BlurImage";
 
 interface AlbumContentProps {
   currentAlbum: Album | null;
@@ -96,9 +97,9 @@ const AlbumContent = ({
       <div className="relative z-10">
         {/* Album info */}
         <div className="flex flex-col md:flex-row p-6 gap-6 pb-8 items-center md:items-end">
-          <img
-            src={currentAlbum?.imageUrl}
-            alt={currentAlbum?.title}
+          <BlurImage
+            src={currentAlbum?.imageUrl || "/placeholder.svg"}
+            alt={currentAlbum?.title || "Album Cover"}
             className="w-40 h-40 md:w-[240px] md:h-[240px] object-cover shadow-xl rounded"
           />
           <div className="flex flex-col justify-end text-center md:text-left">
@@ -171,10 +172,10 @@ const AlbumContent = ({
                     </div>
 
                     <div className="flex items-center gap-3">
-                      <img
-                        src={song.imageUrl}
+                      <BlurImage
+                        src={song.imageUrl || "/placeholder.svg"}
                         alt={song.title}
-                        className="size-10 object-cover"
+                        className="size-10 object-cover transition-[filter,opacity] duration-300"
                       />
                       <div>
                         <div className="font-medium text-white">

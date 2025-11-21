@@ -1,6 +1,7 @@
 import { useMusicStore } from "@/stores/useMusicStore";
 import FeaturedGridSkeleton from "@/pages/home/components/skeleton/FeaturedGridSkeleton";
 import PlayButton from "./PlayButton";
+import BlurImage from "@/components/BlurImage";
 
 const FeaturedSection = () => {
   const { isLoading, featuredSongs, error } = useMusicStore();
@@ -17,10 +18,10 @@ const FeaturedSection = () => {
           className="flex items-center bg-zinc-800/50 rounded-md overflow-hidden 
           hover:bg-zinc-700/50 transition-colors group cursor-pointer relative"
         >
-          <img
-            src={song.imageUrl}
+          <BlurImage
+            src={song.imageUrl || "/placeholder.svg"}
             alt={song.title}
-            className="w-16 m-2 sm:m-0 sm:w-20 sm:h-20 h-16 object-cover flex-shrink-0"
+            className="w-16 m-2 sm:m-0 sm:w-20 sm:h-20 h-16 object-cover flex-shrink-0 transition-[filter,opacity] duration-300"
           />
           <div className="flex-1 p-4">
             <p className="font-medium truncate max-w-[140px] sm:max-w-[250px]">
