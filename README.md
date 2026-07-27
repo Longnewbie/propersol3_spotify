@@ -234,53 +234,7 @@ Hệ thống có Global Error Handling Middleware tại `server.js`.
 
 ---
 
-## 13. Biến môi trường (.env)
-
-Cần tạo tệp `.env` riêng rẽ ở Backend và Frontend để chạy hệ thống:
-
-**Backend (`be/.env`)**
-| Biến | Mô tả |
-|---|---|
-| `PORT` | Cổng chạy Server (Mặc định 5000) |
-| `MONGODB_URI` | Chuỗi kết nối đến cơ sở dữ liệu MongoDB Atlas |
-| `ADMIN_EMAIL` | Danh sách các Email Admin cách nhau bởi dấu phẩy (VD: `a@gmail.com,b@gmail.com`) |
-| `CLOUDINARY_API_KEY` | API Key kết nối với tài khoản Cloudinary |
-| `CLOUDINARY_API_SECRET` | Secret Key xác thực tài khoản Cloudinary |
-| `CLOUDINARY_CLOUD_NAME` | Cloud Name trên hệ thống Cloudinary |
-| `NODE_ENV` | `development` hoặc `production` |
-| `CLERK_PUBLISHABLE_KEY` | Public Key xác thực Clerk (BE) |
-| `CLERK_SECRET_KEY` | Secret Key xác thực Clerk (BE) |
-
-**Frontend (`fe/.env`)**
-| Biến | Mô tả |
-|---|---|
-| `VITE_CLERK_PUBLISHABLE_KEY` | Public Key để khởi tạo Clerk React |
-
----
-
-## 14. Hướng dẫn cài đặt
-
-1. **Clone repository**:
-   ```bash
-   git clone <repo_url>
-   cd propersol3_spotify
-   ```
-2. **Cài đặt thư viện**:
-   - Backend: `cd be && npm install`
-   - Frontend: `cd fe && npm install`
-3. **Thiết lập Environment**:
-   - Copy tệp `.env.example` thành `.env` cho cả `fe` và `be`, cung cấp đúng thông tin kết nối DB và Clerk.
-4. **Khởi chạy ứng dụng (Môi trường Dev)**:
-   - Terminal 1 (Backend): `npm run dev` (sẽ chạy server tại `http://localhost:5000`)
-   - Terminal 2 (Frontend): `npm run dev` (sẽ mở trang React trên Vite)
-5. **Build & Deploy Production**:
-   - Chạy `npm run build` ở thư mục `fe`. Vite sẽ đóng gói file tĩnh (HTML, CSS, JS) vào thư mục `fe/dist`.
-   - Server Node.js được cấu hình tự động phục vụ file tĩnh này khi biến `NODE_ENV=production`.
-   - Start Server bằng `npm run start`.
-
----
-
-## 15. Điểm mạnh của dự án
+## 13. Điểm mạnh của dự án
 
 - **Kiến trúc rõ ràng**: Việc tách riêng Controllers, Routes, Models giúp code dễ bảo trì (Separation of Concerns).
 - **Trải nghiệm người dùng tốt**: Quản lý State bằng Zustand giúp player nhạc không bị gián đoạn (persistent) khi chuyển trang. Cấu hình UI xịn xò với Tailwind và Radix UI.
@@ -289,7 +243,7 @@ Cần tạo tệp `.env` riêng rẽ ở Backend và Frontend để chạy hệ 
 
 ---
 
-## 16. Hạn chế
+## 14. Hạn chế
 
 - **Thiếu Data Validation**: Chưa sử dụng các công cụ rà soát body payload từ client một cách chặt chẽ (như Joi hoặc Zod).
 - **Thiếu Rate Limiting & Security Headers**: Nên bổ sung `express-rate-limit` để chống Spam API và `helmet` để che giấu các header quan trọng.
@@ -298,7 +252,7 @@ Cần tạo tệp `.env` riêng rẽ ở Backend và Frontend để chạy hệ 
 
 ---
 
-## 17. Hướng phát triển trong tương lai
+## 15. Hướng phát triển trong tương lai
 
 - Cải tiến tính năng Chat: Hỗ trợ chat nhóm (Group Chat) và gửi sticker/hình ảnh.
 - Thuật toán Gợi ý: Gợi ý nhạc thông minh dựa theo lịch sử nghe hoặc bài hát yêu thích (Recommend System).
@@ -308,6 +262,6 @@ Cần tạo tệp `.env` riêng rẽ ở Backend và Frontend để chạy hệ 
 
 ---
 
-## 18. Kết luận
+## 16. Kết luận
 
 Dự án là một hệ thống Music Streaming Platform hoàn chỉnh, có kiến trúc tốt cho một ứng dụng có quy mô tầm trung (Monolithic kết hợp SPA). Với việc giải quyết hiệu quả hai bài toán là Streaming Media đám mây và Tương tác WebSockets, đây là một minh chứng xuất sắc cho kỹ năng kết hợp các công nghệ MERN Stack hiện đại (Vite + Zustand + Socket.io + Clerk) vào phát triển phần mềm nghiệp vụ.
